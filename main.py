@@ -10,10 +10,10 @@ import time
 # import tempfile
 # from docxtpl import DocxTemplate
 
-list_WidyGSM = ['Код ГСМ','Название ГСМ','Вид ГСМ','Марка ГСМ']
-list_PostawhikiGSM=['Код поставщика', 'Название производителя', 'Адрес производителя', 'Код ГСМ']
-list_tab3=[]
-list_tab4=[]
+list_WidyGSM = ['№','Код ГСМ','Название ГСМ','Единица измерения','Вид ГСМ','Марка ГСМ']
+list_PostawhikiGSM=['№','Код поставщика', 'Название производителя', 'Адрес производителя', 'Код ГСМ']
+list_Woditely=['№','ТабНом','ФИО водителя','ГосНомер','Дата приема на работу','ДатаВыдВодУдост','ДатаДействВодУдост','НомВодУдост','КатегВодУдост']
+list_tehnSrPredpr=['№','Код гаражный','НомГосРегистр','Марка авто','Номер кузова','ЕдИмз','Грузоподъёмность','Год выпусмка','Первичная стоимость','Код %','Остаточная стоимость']
 
 conn = psycopg2.connect(
         host = host,
@@ -124,10 +124,10 @@ class mainProgramm(tk.Frame):
         self.closeApp = tk.Button(self.frameMain,text="Выход",fg="black",width=18,font=('',15),command=self.closeApp)
         self.closeApp.place(x=555,y=525)
 
-        img = Image.open("photo.jpeg")
-        self.tkimage = ImageTk.PhotoImage(img)
-        self.l3=tk.Label(self.frameMain,image=self.tkimage)
-        self.l3.place(x=50,y=75)
+        # img = Image.open("photo.jpeg")
+        # self.tkimage = ImageTk.PhotoImage(img)
+        # self.l3=tk.Label(self.frameMain,image=self.tkimage)
+        # self.l3.place(x=50,y=75)
         ######
         self.infoUser = tk.Label(self.frameMain,text=f"Пользователь:\t{Polzovatel}",font=('',16))
         self.infoUser.place(x=50,y=400)
@@ -201,10 +201,10 @@ class mainProgramm(tk.Frame):
         self.spiskButton2 = tk.Button(self.spiskiFrame, text = "Поставщики ГСМ", bd=0, justify=CENTER, height=3, font=('',18),command=partial(self.viewDB, list_PostawhikiGSM, "PostawhikiGSM"))
         self.spiskButton2.pack(side=tk.TOP, fill = tk.X)
 
-        self.spiskButton3 = tk.Button(self.spiskiFrame, text= "Водители предприятия", bd=0, justify=CENTER, height=3, font=('',18))
+        self.spiskButton3 = tk.Button(self.spiskiFrame, text= "Водители предприятия", bd=0, justify=CENTER, height=3, font=('',18),command=partial(self.viewDB,list_Woditely,""))
         self.spiskButton3.pack(side=tk.TOP, fill = tk.X)
 
-        self.spiskButton4 = tk.Button(self.spiskiFrame,text = "Технические средства предприятия", bd=0, justify=CENTER, height=3, font=('',18))
+        self.spiskButton4 = tk.Button(self.spiskiFrame,text = "Технические средства предприятия", bd=0, justify=CENTER, height=3, font=('',18),command=partial(self.viewDB,list_tehnSrPredpr,""))
         self.spiskButton4.pack(side=tk.TOP, fill= tk.X)
 
         self.botLine = tk.Label(self.spiskiFrame, bg="#107eaf", height=5)
@@ -279,11 +279,11 @@ class mainProgramm(tk.Frame):
         # self.otButton2 = tk.Button(self.othWindow,text='Отчёт о движении ГСМ на складе',bd=0,justify=CENTER, height=3, font=('', 18),command=partial(self.insertTable, list_tab2))
         # self.otButton2.pack(side=tk.TOP,fill=X)
 
-        self.otButton3 = tk.Button(self.othWindow, text='Отчёт по водителям',bd=0, justify=CENTER, height=3,font=('',18), command=partial(self.insertTable, list_tab3))
-        self.otButton3.pack(side=tk.TOP, fill=X)
-
-        self.otButton4 = tk.Button(self.othWindow, text='Отчёт по путевым листам',bd=0, justify=CENTER, height=3,font=('', 18), command=partial(self.insertTable, list_tab4))
-        self.otButton4.pack(side=tk.TOP, fill=X)
+        # self.otButton3 = tk.Button(self.othWindow, text='Отчёт по водителям',bd=0, justify=CENTER, height=3,font=('',18), command=partial(self.insertTable, list_Woditely))
+        # self.otButton3.pack(side=tk.TOP, fill=X)
+        #
+        # self.otButton4 = tk.Button(self.othWindow, text='Отчёт по путевым листам',bd=0, justify=CENTER, height=3,font=('', 18), command=partial(self.insertTable, list_tab4))
+        # self.otButton4.pack(side=tk.TOP, fill=X)
 
         self.botLine = tk.Label(self.othWindow, bg="#107eaf", height=5)
         self.botLine.pack(side=tk.BOTTOM, fill=tk.X)
@@ -291,33 +291,39 @@ class mainProgramm(tk.Frame):
         self.closeB = tk.Button(self.othWindow, text='Закрыть', width=5, font=('', 18), command=othWind.destroy)
         self.closeB.place(x=360,y=535)
 
+
     #Окно добавления в таблицу
-    def insertTable(self,nameBD):
+    def insertTable(self,tablename,list):
 
         dbWindow = tk.Toplevel(self)
-        dbWindow.title("Добавление в db")
+        dbWindow.title(f"Добавление в {tablename}")
         dbWindow.geometry("300x300")
         dbWindow.resizable(False,False)
 
         self.dbMain = tk.Frame(dbWindow)
         self.dbMain.place(relwidth=1, relheight=1)
 
-        ry = 35
-        for i in nameBD:
+        for i in list:
             self.lab_Login = tk.Label(self.dbMain, text=i, font=10)
-            self.lab_Login.place(x=45, y=ry)
+            self.lab_Login.pack(fill=X)
 
-            self.inputLogin = ttk.Entry(self.dbMain, width=15)
-            self.inputLogin.place(x=80, y=ry)
-            # a.append(b)
-            ry+=20
+            inputLogin = ttk.Entry(self.dbMain, width=15)
+            inputLogin.pack(fill=X)
+            labTab=(inputLogin.get())
+            print(labTab)
+
+        self.pushBut = tk.Button(self.dbMain,text = 'Д',bd = 0, justify=CENTER, height=3, font=('',18))
+        self.pushBut.pack(side = BOTTOM)
+
+
+
 
         # try:
         #     pass
         #     with conn.cursor() as cursor:
         #         cursor.execute(
-        #             f"""INSERT INTO tab1 (tab1_id, number, name) VALUES
-        #             ('{a[0]}', '{self.inputLogin.get[1]}', '{self.inputLogin.get[2]}');"""
+        #             f"""INSERT INTO {tablename} {list_WidyGSM} VALUES
+        #             ('{new_data[0]}', '{new_data[1]}', '{new_data[2]}');"""
         #         )
         #         print("[INFO] Insert GOOOD!")
         # except Exception as _ex:
@@ -350,14 +356,14 @@ class mainProgramm(tk.Frame):
     #Простотр содержимого БД
     def viewDB(self,list,tablename):
 
-        viewDB = tk.Toplevel(self)
-        viewDB .title(f"{tablename}")
-        viewDB .geometry('1280x1024')
-        viewDB.rowconfigure(index=0,weight=1)
-        viewDB.columnconfigure(index=0,weight=1)
-        viewDB .resizable(True, True)
+        viewTableDataBases = tk.Toplevel(self)
+        viewTableDataBases .title(f"{tablename}")
+        viewTableDataBases .geometry('1280x780')
+        viewTableDataBases.rowconfigure(index=0,weight=1)
+        viewTableDataBases.columnconfigure(index=0,weight=1)
+        viewTableDataBases .resizable(False,False)
 
-        self.viewDB  = tk.Frame(viewDB)
+        self.viewDB  = tk.Frame(viewTableDataBases)
         self.viewDB.place(relwidth=1, relheight=1)
         data = ('',)
         try:
@@ -365,13 +371,14 @@ class mainProgramm(tk.Frame):
                 cursor.execute(f"""SELECT * FROM "{tablename}" """)
                 data = (row for row in cursor.fetchall())
         except Exception as _ex:
-            print("HELP")
+            print("ТАБЛИЦА НЕ ПОДТЯНУЛАСЬ")
 
         self.tree = ttk.Treeview(self.viewDB,height=37,columns=list, show="headings")
         self.tree.pack(fill=X)
 
         for i in list:
-            self.tree.heading(f"{i}",text=f"{i}",anchor=W)
+            self.tree.heading(f"{i}",text=f"{i}")
+            self.tree.column(f"{i}",width=10,anchor=CENTER)
 
         for row in data:
             self.tree.insert('',tk.END,values=tuple(row))
@@ -382,14 +389,18 @@ class mainProgramm(tk.Frame):
         self.blueLab = tk.Label(self.viewDB, bg="#107eaf", height=5)
         self.blueLab.pack(side = BOTTOM, fill = X)
 
-        self.inputButton = tk.Button(self.viewDB, text="Добавить", bd=0, justify=CENTER, width=12, font=('', 18))
+        self.inputButton = tk.Button(self.viewDB, text="Добавить", bd=0, justify=CENTER, width=12, font=('', 18),command=partial(self.insertTable,tablename,list))
         self.inputButton.place(x=100,y=720)
 
         self.changeButton = tk.Button(self.viewDB, text = "Изменить", bd=0, justify=CENTER, width=12, font=('',18))
         self.changeButton.place(x=300,y=720)
 
-        self.closeButton = tk.Button(self.viewDB, text = "Закрыть", bd=0, justify=CENTER, width=12, font=('',18),command=viewDB.destroy)
+        self.closeButton = tk.Button(self.viewDB, text = "Закрыть", bd=0, justify=CENTER, width=12, font=('',18),command=self.reboot)
         self.closeButton.place(x=500,y=720)
+
+    def reboot(a, _event=None):
+        a.destroy()
+        mainProgramm(win)
 
     #Выход из системы
     def rebot(a, _event=None):
@@ -399,6 +410,7 @@ class mainProgramm(tk.Frame):
 
 class mainBD(tk.Frame):
     pass
+
 
 class Table(tk.Frame):
     def __int__(self,parent = None, headings = tuple(), rows = tuple()):
