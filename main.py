@@ -10,10 +10,10 @@ import time
 # import tempfile
 # from docxtpl import DocxTemplate
 
-list_WidyGSM = ['№','Код ГСМ','Название ГСМ','Единица измерения','Вид ГСМ','Марка ГСМ']
-list_PostawhikiGSM=['№','Код поставщика', 'Название производителя', 'Адрес производителя', 'Код ГСМ']
-list_Woditely=['№','ТабНом','ФИО водителя','ГосНомер','Дата приема на работу','ДатаВыдВодУдост','ДатаДействВодУдост','НомВодУдост','КатегВодУдост']
-list_tehnSrPredpr=['№','Код гаражный','НомГосРегистр','Марка авто','Номер кузова','ЕдИмз','Грузоподъёмность','Год выпусмка','Первичная стоимость','Код %','Остаточная стоимость']
+ViewGuideGSM = ['№','Код ГСМ', 'Название ГСМ', 'Единица измерения', 'Вид ГСМ', 'Марка ГСМ']
+VendorGSM=['№','Код поставщика', 'Название производителя', 'Адрес производителя', 'Код ГСМ']
+CompanyDrivers=['num\n', 'Табельный номер\nводителя\n', 'ФИО водителя\n', 'Государственный\nномер\n', 'Дата приема\nна работу\n', 'Дата выдачи\nводительсого удостовереня\n', 'Дата действия\nводительского удостоверения\n', 'Номер водительского\nудостоверения', 'Категория водительского\nудостоверения']
+TechnicalMeans=['№', 'Код гаражный', 'Номер государственной\nрегистрации', 'Марка авто', 'Номер кузова', 'ЕдИмз', 'Грузоподъёмность', 'Год выпусмка', 'Первичная\nстоимость', 'Код %', 'Остаточная\nстоимость']
 
 conn = psycopg2.connect(
         host = host,
@@ -22,6 +22,7 @@ conn = psycopg2.connect(
         database = db_name
         )
 conn.autocommit = True
+
 
 class loginSystem(tk.Frame):
 
@@ -109,8 +110,11 @@ class mainProgramm(tk.Frame):
         self.l1 = tk.Frame(self.frameMain,bg="#107eaf",width=300,height=600)
         self.l1.pack(side=tk.RIGHT, fill=tk.Y)
 
-        self.spiskiButton = tk.Button(self.frameMain,text = "Справочные документы",fg="black",width=18, font=('', 15),command=self.spiskiApp)
-        self.spiskiButton.place(x=555, y = 100)
+        entryDocuments = EntryDocuments(self.frameMain)
+
+        self.spiskiButton = tk.Button(self.frameMain, text="Справочные документы", fg="black", width=18, font=('', 15),
+                                      command=entryDocuments.RefDocM)
+        self.spiskiButton.place(x=555, y=100)
 
         self.docButton = tk.Button(self.frameMain,text="Оперативные документы", fg="black",width=18,font=('',15), command= self.docApp)
         self.docButton.place(x=555,y=200)
@@ -139,7 +143,6 @@ class mainProgramm(tk.Frame):
         time_string = time.strftime("%m/%d/%Y", named_tuple)
         self.LogTime=tk.Label(self.frameMain,text=f"Дата входа:\t{time_string}",font=('',16))
         self.LogTime.place(x=50,y=450)
-
     #Окно инфо
     def infoApp(self):
         w = win.winfo_screenwidth()
@@ -161,7 +164,7 @@ class mainProgramm(tk.Frame):
         self.topText = tk.Label(self.infoFrame,text="Информация о АРМ",bg="#107eaf", font = ('',18))
         self.topText.place(x=325,y=30)
 
-        with open('infoProgramm.txt','r') as f:
+        with open('info/infoProgramm.txt','r') as f:
             t = f.read()
         self.infApp = tk.Label(self.infoFrame,text =t,font = ('',18))
         self.infApp.pack(anchor="n",pady=45)
@@ -195,16 +198,16 @@ class mainProgramm(tk.Frame):
         self.topText = tk.Label(self.spiskiFrame, text="Справочные документы", bg="#107eaf", font=('', 18))
         self.topText.place(x=305,y=30)
 
-        self.spiskButton1 = tk.Button(self.spiskiFrame, text ="Виды ГСМ", bd=0, justify=CENTER, height=3,font=('',18),command=partial(self.viewDB, list_WidyGSM, "WidyGSM"))
+        self.spiskButton1 = tk.Button(self.spiskiFrame, text ="Виды ГСМ", bd=0, justify=CENTER, height=3, font=('',18), command=partial(self.viewDB, ViewGuideGSM, "ViewGuideGSM"))
         self.spiskButton1.pack(side = tk.TOP, fill = tk.X)
 
-        self.spiskButton2 = tk.Button(self.spiskiFrame, text = "Поставщики ГСМ", bd=0, justify=CENTER, height=3, font=('',18),command=partial(self.viewDB, list_PostawhikiGSM, "PostawhikiGSM"))
+        self.spiskButton2 = tk.Button(self.spiskiFrame, text = "Поставщики ГСМ", bd=0, justify=CENTER, height=3, font=('',18), command=partial(self.viewDB, VendorGSM, "VendorGSM"))
         self.spiskButton2.pack(side=tk.TOP, fill = tk.X)
 
-        self.spiskButton3 = tk.Button(self.spiskiFrame, text= "Водители предприятия", bd=0, justify=CENTER, height=3, font=('',18),command=partial(self.viewDB,list_Woditely,""))
+        self.spiskButton3 = tk.Button(self.spiskiFrame, text= "Водители предприятия", bd=0, justify=CENTER, height=3, font=('',18), command=partial(self.viewDB, CompanyDrivers, "CompanyDrivers"))
         self.spiskButton3.pack(side=tk.TOP, fill = tk.X)
 
-        self.spiskButton4 = tk.Button(self.spiskiFrame,text = "Технические средства предприятия", bd=0, justify=CENTER, height=3, font=('',18),command=partial(self.viewDB,list_tehnSrPredpr,""))
+        self.spiskButton4 = tk.Button(self.spiskiFrame, text = "Технические средства предприятия", bd=0, justify=CENTER, height=3, font=('',18), command=partial(self.viewDB, TechnicalMeans, "TechnicalMeans"))
         self.spiskButton4.pack(side=tk.TOP, fill= tk.X)
 
         self.botLine = tk.Label(self.spiskiFrame, bg="#107eaf", height=5)
@@ -291,7 +294,6 @@ class mainProgramm(tk.Frame):
         self.closeB = tk.Button(self.othWindow, text='Закрыть', width=5, font=('', 18), command=othWind.destroy)
         self.closeB.place(x=360,y=535)
 
-
     #Окно добавления в таблицу
     def insertTable(self,tablename,list):
 
@@ -302,21 +304,18 @@ class mainProgramm(tk.Frame):
 
         self.dbMain = tk.Frame(dbWindow)
         self.dbMain.place(relwidth=1, relheight=1)
-
+        self.vars1 = [StringVar() for _ in VendorGSM]
         for i in list:
             self.lab_Login = tk.Label(self.dbMain, text=i, font=10)
             self.lab_Login.pack(fill=X)
 
-            inputLogin = ttk.Entry(self.dbMain, width=15)
-            inputLogin.pack(fill=X)
-            labTab=(inputLogin.get())
-            print(labTab)
+            self.e = ttk.Entry(self.dbMain, textvariable=self.vars1[i],width=15)
+            self.e.pack(fill=X)
+            # labTab=(inputLogin.get())
+            # print(labTab)
 
-        self.pushBut = tk.Button(self.dbMain,text = 'Д',bd = 0, justify=CENTER, height=3, font=('',18))
+        self.pushBut = tk.Button(self.dbMain,text = 'Д',bd = 0, justify=CENTER, height=3, font=('',18), command=partial(self.bitch,self.varsl))
         self.pushBut.pack(side = BOTTOM)
-
-
-
 
         # try:
         #     pass
@@ -354,83 +353,124 @@ class mainProgramm(tk.Frame):
         self.noButton.place(x=150,y=100)
 
     #Простотр содержимого БД
-    def viewDB(self,list,tablename):
-
-        viewTableDataBases = tk.Toplevel(self)
-        viewTableDataBases .title(f"{tablename}")
-        viewTableDataBases .geometry('1280x780')
-        viewTableDataBases.rowconfigure(index=0,weight=1)
-        viewTableDataBases.columnconfigure(index=0,weight=1)
-        viewTableDataBases .resizable(False,False)
-
-        self.viewDB  = tk.Frame(viewTableDataBases)
-        self.viewDB.place(relwidth=1, relheight=1)
-        data = ('',)
-        try:
-            with conn.cursor() as cursor:
-                cursor.execute(f"""SELECT * FROM "{tablename}" """)
-                data = (row for row in cursor.fetchall())
-        except Exception as _ex:
-            print("ТАБЛИЦА НЕ ПОДТЯНУЛАСЬ")
-
-        self.tree = ttk.Treeview(self.viewDB,height=37,columns=list, show="headings")
-        self.tree.pack(fill=X)
-
-        for i in list:
-            self.tree.heading(f"{i}",text=f"{i}")
-            self.tree.column(f"{i}",width=10,anchor=CENTER)
-
-        for row in data:
-            self.tree.insert('',tk.END,values=tuple(row))
-
-        for person in data:
-            self.tree.insert("",END,values=tuple(person))
-
-        self.blueLab = tk.Label(self.viewDB, bg="#107eaf", height=5)
-        self.blueLab.pack(side = BOTTOM, fill = X)
-
-        self.inputButton = tk.Button(self.viewDB, text="Добавить", bd=0, justify=CENTER, width=12, font=('', 18),command=partial(self.insertTable,tablename,list))
-        self.inputButton.place(x=100,y=720)
-
-        self.changeButton = tk.Button(self.viewDB, text = "Изменить", bd=0, justify=CENTER, width=12, font=('',18))
-        self.changeButton.place(x=300,y=720)
-
-        self.closeButton = tk.Button(self.viewDB, text = "Закрыть", bd=0, justify=CENTER, width=12, font=('',18),command=self.reboot)
-        self.closeButton.place(x=500,y=720)
 
     def reboot(a, _event=None):
         a.destroy()
         mainProgramm(win)
-
     #Выход из системы
     def rebot(a, _event=None):
         a.destroy()
         loginSystem(win)
 
 
-class mainBD(tk.Frame):
-    pass
+class EntryDocuments(tk.Frame):
+    def __init__(self,win):
+        super().__init__(win)
+
+    def RefDocM(self):
+        w = win.winfo_screenwidth()
+        h = win.winfo_screenheight()
+        w = (w // 2) - 400
+        h = (h // 2) - 400
+
+        spiskiAppWindow = tk.Toplevel(self)
+        spiskiAppWindow.title('Справочные документы')
+        spiskiAppWindow.geometry('800x600+{}+{}'.format(w, h))
+        spiskiAppWindow.resizable(False, False)
+
+        self.spiskiFrame = tk.Frame(spiskiAppWindow)
+        self.spiskiFrame.place(relwidth=1, relheight=1)
+
+        self.topLine = tk.Label(self.spiskiFrame, bg="#107eaf", height=5)
+        self.topLine.pack(side=tk.TOP, fill=tk.X)
+
+        self.topText = tk.Label(self.spiskiFrame, text="Справочные документы", bg="#107eaf", font=('', 18))
+        self.topText.place(x=305, y=30)
+
+        self.spiskButton1 = tk.Button(self.spiskiFrame, text="Виды ГСМ", bd=0, justify=CENTER, height=3, font=('', 18),
+                                      command=lambda: mainFunct.viewDB(self, ViewGuideGSM, "ViewGuideGSM"))
+        self.spiskButton1.pack(side=tk.TOP, fill=tk.X)
+
+        self.spiskButton2 = tk.Button(self.spiskiFrame, text="Поставщики ГСМ", bd=0, justify=CENTER, height=3,font=('', 18),
+                                      command=lambda: mainFunct.viewDB(self, VendorGSM, "VendorGSM"))
+        self.spiskButton2.pack(side=tk.TOP, fill=tk.X)
+
+        self.spiskButton3 = tk.Button(self.spiskiFrame, text="Водители предприятия", bd=0, justify=CENTER, height=3,font=('', 18),
+                                      command=lambda: mainFunct.viewDB(self, CompanyDrivers, "CompanyDrivers"))
+        self.spiskButton3.pack(side=tk.TOP, fill=tk.X)
+
+        self.spiskButton4 = tk.Button(self.spiskiFrame, text="Технические средства предприятия", bd=0, justify=CENTER,height=3, font=('', 18),
+                                      command=lambda: mainFunct.viewDB(self, TechnicalMeans, "TechnicalMeans"))
+        self.spiskButton4.pack(side=tk.TOP, fill=tk.X)
+
+        self.botLine = tk.Label(self.spiskiFrame, bg="#107eaf", height=5)
+        self.botLine.pack(side=tk.BOTTOM, fill=tk.X)
+
+        self.closeB = tk.Button(self.spiskiFrame, text='Закрыть', width=5, font=('', 18),
+                                command=spiskiAppWindow.destroy)
+        self.closeB.place(x=360, y=535)
 
 
-class Table(tk.Frame):
-    def __int__(self,parent = None, headings = tuple(), rows = tuple()):
-        super().__init__(parent)
+class mainFunct(tk.Frame):
+    #Функция вывода данных из БД в таблицу
+    def viewDB(self, column_names, tablename):
+        viewTableDataBases = tk.Toplevel(self)
+        viewTableDataBases.title(f"{tablename}")
+        screen_width = viewTableDataBases.winfo_screenwidth()
+        viewTableDataBases.geometry(f'{screen_width}x1080')
+        viewTableDataBases.rowconfigure(index=0, weight=1)
+        viewTableDataBases.columnconfigure(index=0, weight=1)
+        viewTableDataBases.resizable(False, False)
 
-        table=ttk.Treeview(self,show="headings", selectmode="browse")
-        table["columns"]=headings
-        table["displaycolumns"]=headings
+        self.viewDB = tk.Frame(viewTableDataBases)
+        self.viewDB.place(relwidth=1, relheight=1)
 
-        for head in headings:
-            table.heading(head,text=head,anchor=tk.CENTER)
-            table.column(head,anchor=tk.CENTER)
+        data = []
+        try:
+            with conn.cursor() as cursor:
+                cursor.execute(f"""SELECT * FROM "{tablename}" """)
+                data = [row for row in cursor.fetchall()]
+        except Exception as _ex:
+            print("ТАБЛИЦА НЕ ПОДТЯНУЛАСЬ")
 
-        for row in rows:
-            table.insert('',tk.END, values=tuple(row))
+        self.tree = ttk.Treeview(self.viewDB, height=37, columns=column_names, show="headings")
+        self.tree.pack(fill=X)
 
-        # scrolltable = tk.Scrollbar(self, command=table.yview)
-        # table.configure(yscrollcommand=scrolltable.set)
-        # scrolltable.pack(side=tk.RIGHT, fill=tk.Y)
-        # table.pack(expand=tk.YES, fill=tk.BOTH)
+        total_width = 0
+        for i in column_names:
+            self.tree.heading(f"{i}", text=f"{i}")
+            if i == '№':
+                self.tree.column(f"{i}", stretch=False)
+                self.tree.column(f"{i}", width=50)
+                total_width += 50;
+            else:
+                column_width = screen_width // len(column_names)
+                self.tree.column(f"{i}", width=column_width, stretch=True)
+                total_width += column_width
+
+        for row in data:
+            self.tree.insert('', tk.END, values=tuple(row))
+            for i, value in enumerate(row):
+                max_width = max([len(str(val)) for j, val in enumerate(row)] + [len(column_names[i])])
+                column_width = screen_width // len(column_names)
+                self.tree.column(column_names[i], width=max_width + 20, anchor=CENTER)
+
+        for person in data:
+            self.tree.insert("", END, values=tuple(person))
+
+        self.blueLab = tk.Label(self.viewDB, bg="#107eaf", height=35)
+        self.blueLab.pack(side=tk.BOTTOM, fill = tk.X)
+
+        # self.inputButton = tk.Button(self.viewDB, text="Добавить", bd=0, justify=CENTER, width=12, font=('', 18),
+        #                              command=partial(self.insertTable, tablename, list))
+        # self.inputButton.place(x=100, y=720)
+        #
+        # self.changeButton = tk.Button(self.viewDB, text="Изменить", bd=0, justify=CENTER, width=12, font=('', 18))
+        # self.changeButton.place(x=300, y=720)
+        #
+        # self.closeButton = tk.Button(self.viewDB, text="Закрыть", bd=0, justify=CENTER, width=12, font=('', 18),
+        #                              command=self.reboot)
+        # self.closeButton.place(x=500, y=720)
 
 
 
