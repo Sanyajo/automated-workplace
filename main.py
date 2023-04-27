@@ -249,7 +249,7 @@ class mainProgramm(tk.Frame):
         self.docButton2 = tk.Button(self.docFrame, text = 'Товарно-транспортная накладная', bd = 0, justify=CENTER, height=3, font=('',18), command=partial(self.viewDB, list_ttn, "ttn", "ТТН"))
         self.docButton2.pack(side = tk.TOP, fill = X)
 
-        self.docButton3 = tk.Button(self.docFrame, text = 'Карточка складского учета', bd = 0, justify=CENTER, height=3,font=('',18))
+        self.docButton3 = tk.Button(self.docFrame, text = 'Карточка складского учета', bd = 0, justify=CENTER, height=3,font=('',18), command=partial(self.viewDB, list_ksu, "ksu", "Карточная складского учета"))
         self.docButton3.pack(side=tk.TOP, fill = X)
 
         self.docButton4 = tk.Button(self.docFrame, text = 'Путевой лист',bd = 0, justify=CENTER,height=3,font=('',18), command=partial(self.viewDB, list_pl, "pl", "ПЛ"))
@@ -972,6 +972,66 @@ class mainProgramm(tk.Frame):
             self.closeB = tk.Button(self.inTable, text='Закрыть', fg="black", width=15, font=('', 15),
                                     command=inputTableWin.destroy)
             self.closeB.place(x=210, y=450)
+
+        if tablename == "ksu":
+            buflist = list_ksu
+            inputTableWin = tk.Toplevel(self)
+            inputTableWin.title("Добавление в КСУ")
+            inputTableWin.geometry('400x650')
+            inputTableWin.resizable(False, False)
+
+            self.inTable = tk.Frame(inputTableWin)
+            self.inTable.place(relwidth=1, relheight=1)
+
+            self.l1 = tk.Label(self.inTable, text=f"{buflist[0]}", bd=0, justify=CENTER, height=2, font=('', 18))
+            self.l1.pack(side=tk.TOP, fill=tk.X)
+            self.l1e = ttk.Entry(self.inTable, width=15)
+            self.l1e.pack(fill=tk.X)
+
+            self.l2 = tk.Label(self.inTable, text=f"{buflist[1]}", bd=0, justify=CENTER, height=2, font=('', 18))
+            self.l2.pack(side=tk.TOP, fill=tk.X)
+            self.l2e = ttk.Entry(self.inTable, width=15)
+            self.l2e.pack(fill=tk.X)
+
+            self.l3 = tk.Label(self.inTable, text=f"{buflist[2]}", bd=0, justify=CENTER, height=2, font=('', 18))
+            self.l3.pack(side=tk.TOP, fill=tk.X)
+            self.l3e = ttk.Entry(self.inTable, width=15)
+            self.l3e.pack(fill=tk.X)
+
+            self.l4 = tk.Label(self.inTable, text=f"{buflist[3]}", bd=0, justify=CENTER, height=2, font=('', 18))
+            self.l4.pack(side=tk.TOP, fill=tk.X)
+            self.l4e = ttk.Entry(self.inTable, width=15)
+            self.l4e.pack(fill=tk.X)
+
+            self.l5 = tk.Label(self.inTable, text=f"{buflist[4]}", bd=0, justify=CENTER, height=2, font=('', 18))
+            self.l5.pack(side=tk.TOP, fill=tk.X)
+            self.l5e = ttk.Entry(self.inTable, width=15)
+            self.l5e.pack(fill=tk.X)
+
+            self.l6 = tk.Label(self.inTable, text=f"{buflist[5]}", bd=0, justify=CENTER, height=2, font=('', 18))
+            self.l6.pack(side=tk.TOP, fill=tk.X)
+            self.l6e = ttk.Entry(self.inTable, width=15)
+            self.l6e.pack(fill=tk.X)
+
+            self.l7 = tk.Label(self.inTable, text=f"{buflist[6]}", bd=0, justify=CENTER, height=2, font=('', 18))
+            self.l7.pack(side=tk.TOP, fill=tk.X)
+            self.l7e = ttk.Entry(self.inTable, width=15)
+            self.l7e.pack(fill=tk.X)
+
+            self.l8 = tk.Label(self.inTable, text=f"{buflist[7]}", bd=0, justify=CENTER, height=2, font=('', 18))
+            self.l8.pack(side=tk.TOP, fill=tk.X)
+            self.l8e = ttk.Entry(self.inTable, width=15)
+            self.l8e.pack(fill=tk.X)
+
+            self.l1 = tk.Frame(self.inTable, bg="#107eaf", width=300, height=600)
+            self.l1.pack(side=tk.BOTTOM, fill=tk.X)
+
+            self.inputButton = tk.Button(self.inTable, text="Добавить", fg="black", width=15, font=('', 15))
+            self.inputButton.place(x=10, y=600)
+
+            self.closeB = tk.Button(self.inTable, text='Закрыть', fg="black", width=15, font=('', 15),
+                                    command=inputTableWin.destroy)
+            self.closeB.place(x=210, y=600)
 
 
 
