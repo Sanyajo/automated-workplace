@@ -393,9 +393,9 @@ class mainProgramm(tk.Frame):
                 max_width = max([len(str(val)) for j, val in enumerate(row)] + [len(column_names[i])])
                 column_width = screen_width // len(column_names)
                 self.tree.column(column_names[i], width=max_width + 20, anchor=CENTER)
-
-        for person in data:
-            self.tree.insert("", END, values=tuple(person))
+        #
+        # for person in data:
+        #     self.tree.insert("", END, values=tuple(person))
 
         self.blueLab = tk.Label(self.viewDB, bg="#107eaf", height=35)
         self.blueLab.pack(side=tk.BOTTOM, fill = tk.X)
@@ -447,10 +447,10 @@ class mainProgramm(tk.Frame):
             self.l3e=ttk.Entry(self.inTable, width=15)
             self.l3e.pack(fill=tk.X)
 
-            self.l1 = tk.Frame(self.inTable, bg="#107eaf", width=300, height=600)
-            self.l1.pack(side=tk.BOTTOM, fill=tk.X)
+            self.fram1 = tk.Frame(self.inTable, bg="#107eaf", width=300, height=600)
+            self.fram1.pack(side=tk.BOTTOM, fill=tk.X)
 
-            self.inputButton = tk.Button(self.inTable, text="Добавить",fg="black",width=18,font=('',15))
+            self.inputButton = tk.Button(self.inTable, text="Добавить",fg="black",width=18,font=('',15), command=partial(self.inputTableSQL, "typegsm"))
             self.inputButton.place(x=90,y=300)
 
             self.closeB = tk.Button(self.inTable, text='Закрыть', fg="black",width=18,font=('',15),
@@ -487,8 +487,8 @@ class mainProgramm(tk.Frame):
             self.l4e = ttk.Entry(self.inTable, width=15)
             self.l4e.pack(fill=tk.X)
 
-            self.l1 = tk.Frame(self.inTable, bg="#107eaf", width=300, height=600)
-            self.l1.pack(side=tk.BOTTOM, fill=tk.X)
+            self.fram1 = tk.Frame(self.inTable, bg="#107eaf", width=300, height=600)
+            self.fram1.pack(side=tk.BOTTOM, fill=tk.X)
 
             self.inputButton = tk.Button(self.inTable, text="Добавить", fg="black", width=18, font=('', 15))
             self.inputButton.place(x=90, y=400)
@@ -547,8 +547,8 @@ class mainProgramm(tk.Frame):
             self.l8e = ttk.Entry(self.inTable, width=15)
             self.l8e.pack(fill=tk.X)
 
-            self.l1 = tk.Frame(self.inTable, bg="#107eaf", width=300, height=600)
-            self.l1.pack(side=tk.BOTTOM, fill=tk.X)
+            self.fram1 = tk.Frame(self.inTable, bg="#107eaf", width=300, height=600)
+            self.fram1.pack(side=tk.BOTTOM, fill=tk.X)
 
             self.inputButton = tk.Button(self.inTable, text="Добавить", fg="black", width=15, font=('', 15))
             self.inputButton.place(x=10, y=750)
@@ -617,8 +617,8 @@ class mainProgramm(tk.Frame):
             self.l10e = ttk.Entry(self.inTable, width=15)
             self.l10e.pack(fill=tk.X)
 
-            self.l1 = tk.Frame(self.inTable, bg="#107eaf", width=300, height=600)
-            self.l1.pack(side=tk.BOTTOM, fill=tk.X)
+            self.fram1 = tk.Frame(self.inTable, bg="#107eaf", width=300, height=600)
+            self.fram1.pack(side=tk.BOTTOM, fill=tk.X)
             self.inputButton = tk.Button(self.inTable, text="Добавить", fg="black", width=15, font=('', 15))
             self.inputButton.place(x=15, y=735)
             self.closeB = tk.Button(self.inTable, text='Закрыть', fg="black", width=15, font=('', 15),
@@ -690,8 +690,8 @@ class mainProgramm(tk.Frame):
             # self.l11e = ttk.Entry(self.inTable, width=15)
             # self.l11e.pack(fill=tk.X)
 
-            self.l1 = tk.Frame(self.inTable, bg="#107eaf", width=300, height=600)
-            self.l1.pack(side=tk.BOTTOM, fill=tk.X)
+            self.fram1 = tk.Frame(self.inTable, bg="#107eaf", width=300, height=600)
+            self.fram1.pack(side=tk.BOTTOM, fill=tk.X)
             self.inputButton = tk.Button(self.inTable, text="Добавить", fg="black", width=15, font=('', 15))
             self.inputButton.place(x=15, y=635)
             self.closeB = tk.Button(self.inTable, text='Закрыть', fg="black", width=15, font=('', 15),
@@ -733,8 +733,8 @@ class mainProgramm(tk.Frame):
             self.l5e = ttk.Entry(self.inTable, width=15)
             self.l5e.pack(fill=tk.X)
 
-            self.l1 = tk.Frame(self.inTable, bg="#107eaf", width=300, height=600)
-            self.l1.pack(side=tk.BOTTOM, fill=tk.X)
+            self.fram1 = tk.Frame(self.inTable, bg="#107eaf", width=300, height=600)
+            self.fram1.pack(side=tk.BOTTOM, fill=tk.X)
 
             self.inputButton = tk.Button(self.inTable, text="Добавить", fg="black", width=18, font=('', 15))
             self.inputButton.place(x=90, y=500)
@@ -782,8 +782,8 @@ class mainProgramm(tk.Frame):
             self.l5e.pack(fill=tk.X)
 
 
-            self.l1 = tk.Frame(self.inTable, bg="#107eaf", width=300, height=600)
-            self.l1.pack(side=tk.BOTTOM, fill=tk.X)
+            self.fram1 = tk.Frame(self.inTable, bg="#107eaf", width=300, height=600)
+            self.fram1.pack(side=tk.BOTTOM, fill=tk.X)
             self.inputButton = tk.Button(self.inTable, text="Добавить", fg="black", width=15, font=('', 15))
             self.inputButton.place(x=15, y=500)
             self.closeB = tk.Button(self.inTable, text='Закрыть', fg="black", width=15, font=('', 15),
@@ -855,8 +855,8 @@ class mainProgramm(tk.Frame):
             self.l11e = ttk.Entry(self.inTable, width=15)
             self.l11e.pack(fill=tk.X)
 
-            self.l1 = tk.Frame(self.inTable, bg="#107eaf", width=300, height=600)
-            self.l1.pack(side=tk.BOTTOM, fill=tk.X)
+            self.fram1 = tk.Frame(self.inTable, bg="#107eaf", width=300, height=600)
+            self.fram1.pack(side=tk.BOTTOM, fill=tk.X)
             self.inputButton = tk.Button(self.inTable, text="Добавить", fg="black", width=15, font=('', 15))
             self.inputButton.place(x=15, y=735)
             self.closeB = tk.Button(self.inTable, text='Закрыть', fg="black", width=15, font=('', 15),
@@ -913,8 +913,8 @@ class mainProgramm(tk.Frame):
             self.l10e = ttk.Entry(self.inTable, width=15)
             self.l10e.pack(fill=tk.X)
 
-            self.l1 = tk.Frame(self.inTable, bg="#107eaf", width=300, height=600)
-            self.l1.pack(side=tk.BOTTOM, fill=tk.X)
+            self.fram1 = tk.Frame(self.inTable, bg="#107eaf", width=300, height=600)
+            self.fram1.pack(side=tk.BOTTOM, fill=tk.X)
 
             self.inputButton = tk.Button(self.inTable, text="Добавить", fg="black", width=15, font=('', 15))
             self.inputButton.place(x=10, y=550)
@@ -963,8 +963,8 @@ class mainProgramm(tk.Frame):
             self.l6e = ttk.Entry(self.inTable, width=15)
             self.l6e.pack(fill=tk.X)
 
-            self.l1 = tk.Frame(self.inTable, bg="#107eaf", width=300, height=600)
-            self.l1.pack(side=tk.BOTTOM, fill=tk.X)
+            self.fram1 = tk.Frame(self.inTable, bg="#107eaf", width=300, height=600)
+            self.fram1.pack(side=tk.BOTTOM, fill=tk.X)
 
             self.inputButton = tk.Button(self.inTable, text="Добавить", fg="black", width=15, font=('', 15))
             self.inputButton.place(x=10, y=450)
@@ -1023,8 +1023,8 @@ class mainProgramm(tk.Frame):
             self.l8e = ttk.Entry(self.inTable, width=15)
             self.l8e.pack(fill=tk.X)
 
-            self.l1 = tk.Frame(self.inTable, bg="#107eaf", width=300, height=600)
-            self.l1.pack(side=tk.BOTTOM, fill=tk.X)
+            self.fram1 = tk.Frame(self.inTable, bg="#107eaf", width=300, height=600)
+            self.fram1.pack(side=tk.BOTTOM, fill=tk.X)
 
             self.inputButton = tk.Button(self.inTable, text="Добавить", fg="black", width=15, font=('', 15))
             self.inputButton.place(x=10, y=600)
@@ -1032,6 +1032,22 @@ class mainProgramm(tk.Frame):
             self.closeB = tk.Button(self.inTable, text='Закрыть', fg="black", width=15, font=('', 15),
                                     command=inputTableWin.destroy)
             self.closeB.place(x=210, y=600)
+
+    def inputTableSQL(self, tablename):
+        if tablename == "typegsm":
+            value1 = self.l1e.get()
+            value2 = self.l2e.get()
+            value3 = self.l3e.get()
+
+            try:
+                with conn.cursor() as cursor:
+                    cursor.execute(f"""INSERT INTO "{tablename}"(
+            	                            "code_gsm", "name_gsm", "unit") VALUES 
+            	                            ('{value1}','{value2}', '{value3}') """)
+            except Exception as _ex:
+                print("Действие не выполнено")
+
+
 
 
 
