@@ -490,7 +490,7 @@ class mainProgramm(tk.Frame):
             self.fram1 = tk.Frame(self.inTable, bg="#107eaf", width=300, height=600)
             self.fram1.pack(side=tk.BOTTOM, fill=tk.X)
 
-            self.inputButton = tk.Button(self.inTable, text="Добавить", fg="black", width=18, font=('', 15))
+            self.inputButton = tk.Button(self.inTable, text="Добавить", fg="black", width=18, font=('', 15), command=partial(self.inputTableSQL, "vendorgsm"))
             self.inputButton.place(x=90, y=400)
 
             self.closeB = tk.Button(self.inTable, text='Закрыть', fg="black", width=18, font=('', 15),
@@ -550,7 +550,7 @@ class mainProgramm(tk.Frame):
             self.fram1 = tk.Frame(self.inTable, bg="#107eaf", width=300, height=600)
             self.fram1.pack(side=tk.BOTTOM, fill=tk.X)
 
-            self.inputButton = tk.Button(self.inTable, text="Добавить", fg="black", width=15, font=('', 15))
+            self.inputButton = tk.Button(self.inTable, text="Добавить", fg="black", width=15, font=('', 15), command=partial(self.inputTableSQL, "companydrivers"))
             self.inputButton.place(x=10, y=750)
 
             self.closeB = tk.Button(self.inTable, text='Закрыть', fg="black", width=15, font=('', 15),
@@ -1038,7 +1038,6 @@ class mainProgramm(tk.Frame):
             value1 = self.l1e.get()
             value2 = self.l2e.get()
             value3 = self.l3e.get()
-
             try:
                 with conn.cursor() as cursor:
                     cursor.execute(f"""INSERT INTO "{tablename}"(
@@ -1046,6 +1045,38 @@ class mainProgramm(tk.Frame):
             	                            ('{value1}','{value2}', '{value3}') """)
             except Exception as _ex:
                 self.errorWindows()
+
+        if tablename == "vendorgsm":
+            value1 = self.l1e.get()
+            value2 = self.l2e.get()
+            value3 = self.l3e.get()
+            value4 = self.l4e.get()
+            try:
+                with conn.cursor() as cursor:
+                    cursor.execute(f"""INSERT INTO "{tablename}"(
+            	                            "code_post", "name_proizv", "addres_proizv", "code_gsm") VALUES 
+            	                            ('{value1}','{value2}', '{value3}', '{value4}') """)
+            except Exception as _ex:
+                self.errorWindows()
+
+        if tablename == "companydrivers":
+            value1 = self.l1e.get()
+            value2 = self.l2e.get()
+            value3 = self.l3e.get()
+            value4 = self.l4e.get()
+            value5 = self.l5e.get()
+            value6 = self.l6e.get()
+            value7 = self.l7e.get()
+            value8 = self.l8e.get()
+            try:
+                with conn.cursor() as cursor:
+                    cursor.execute(f"""INSERT INTO "{tablename}"(
+            	                            "tab_number", "drivers_name", "national_avto_num", "date_of_hire", "date_driverlicens", "validity_day_drlic", "num_drivlicens", "category_drivlicens") VALUES 
+            	                            ('{value1}','{value2}', '{value3}', '{value4}', '{value5}', '{value6}', '{value7}', '{value8}') """)
+            except Exception as _ex:
+                self.errorWindows()
+
+
 
     def errorWindows(self):
         w = win.winfo_screenwidth()
