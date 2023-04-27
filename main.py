@@ -20,7 +20,7 @@ list_pl=['Номер путевого\nлиста','Дата составлен�
 list_prihod=['Номер документа','Дата составленеия','Номер ТТН','Дата ТТН','Код ГСМ','Код поставщика','Единица измерения','Количество','Цена','Ставка НДС']
 list_rashod=['Номер документа','Номер ПЛ','Дата ПЛ','Код ГСМ','Единица измерения','Количество','Цена','Ставка НДС']
 list_ksu=['Номер склада','Номер цистерны','Номер документа','Код ГСМ','Код поставщика','Дата оставления\nКСУ','Единица измерения','Стоимость единицы','Остаток на начало\nпериода','Количество прихода','Количество расхода','Остаток на конец\nпериода']
-list_ttn=[]
+list_ttn=['Номер документа','Дата ТТН','Код ГСМ','Код поставщика','Единица измерения','Цена','Количество','Стоимость','Ставка НДС','Сумма НДС','Сумма с НДС']
 
 conn = psycopg2.connect(
         host = host,
@@ -246,7 +246,7 @@ class mainProgramm(tk.Frame):
         self.docButton1 = tk.Button(self.docFrame, text = 'Договор на поставку',bd = 0, justify=CENTER, height=3, font=('',18), command=partial(self.viewDB, list_deliverycontract, "deliverycontract", "Договор на поставку"))
         self.docButton1.pack(side = tk.TOP, fill = X)
 
-        self.docButton2 = tk.Button(self.docFrame, text = 'Товарно-транспортная накладная', bd = 0, justify=CENTER, height=3, font=('',18))
+        self.docButton2 = tk.Button(self.docFrame, text = 'Товарно-транспортная накладная', bd = 0, justify=CENTER, height=3, font=('',18), command=partial(self.viewDB, list_ttn, "ttn", "ТТН"))
         self.docButton2.pack(side = tk.TOP, fill = X)
 
         self.docButton3 = tk.Button(self.docFrame, text = 'Карточка складского учета', bd = 0, justify=CENTER, height=3,font=('',18))
@@ -257,6 +257,14 @@ class mainProgramm(tk.Frame):
 
         self.docButton5 = tk.Button(self.docFrame, text='Наряд', bd=0, justify=CENTER, height=3, font=('', 18), command=partial(self.viewDB, list_naryad, "naryad", "Наряд"))
         self.docButton5.pack(side=tk.TOP, fill=X)
+
+        self.docButton6 = tk.Button(self.docFrame, text='Файл прихода', bd=0, justify=CENTER, height=3, font=('', 18),
+                                    command=partial(self.viewDB, list_prihod, "prihfile", "Файл прихода"))
+        self.docButton6.pack(side=tk.TOP, fill=X)
+
+        self.docButton7 = tk.Button(self.docFrame, text='Файл расхода', bd=0, justify=CENTER, height=3, font=('', 18),
+                                    command=partial(self.viewDB, list_rashod, "rashfile", "Файл расхода"))
+        self.docButton7.pack(side=tk.TOP, fill=X)
 
 
 
@@ -308,29 +316,6 @@ class mainProgramm(tk.Frame):
     #Окно добавления в таблицу
     def insertTable(self,tablename,list):
 
-        dbWindow = tk.Toplevel(self)
-        dbWindow.title(f"Добавление в {tablename}")
-        dbWindow.geometry("300x300")
-        dbWindow.resizable(False,False)
-
-        self.dbMain = tk.Frame(dbWindow)
-        self.dbMain.place(relwidth=1, relheight=1)
-
-        for i in list:
-            self.lab_Login = tk.Label(self.dbMain, text=i, font=10)
-            self.lab_Login.pack(fill=X)
-
-            inputLogin = ttk.Entry(self.dbMain, width=15)
-            inputLogin.pack(fill=X)
-            labTab=(inputLogin.get())
-            print(labTab)
-
-        self.pushBut = tk.Button(self.dbMain,text = 'Д',bd = 0, justify=CENTER, height=3, font=('',18))
-        self.pushBut.pack(side = BOTTOM)
-
-
-
-
         # try:
         #     pass
         #     with conn.cursor() as cursor:
@@ -340,7 +325,7 @@ class mainProgramm(tk.Frame):
         #         )
         #         print("[INFO] Insert GOOOD!")
         # except Exception as _ex:
-        #     pass
+            pass
 
     #Окно закрытия приложения
     def closeApp(self):
@@ -644,7 +629,7 @@ class mainProgramm(tk.Frame):
             buflist = list_deliverycontract
             inputTableWin = tk.Toplevel(self)
             inputTableWin.title("Добавление в договора на поставку")
-            inputTableWin.geometry('410x800')
+            inputTableWin.geometry('410x700')
             inputTableWin.resizable(False, False)
 
             self.inTable = tk.Frame(inputTableWin)
@@ -695,23 +680,23 @@ class mainProgramm(tk.Frame):
             self.l9e = ttk.Entry(self.inTable, width=15)
             self.l9e.pack(fill=tk.X)
 
-            self.l10 = tk.Label(self.inTable, text=f"{buflist[9]}", bd=0, justify=CENTER, height=1, font=('', 18))
-            self.l10.pack(side=tk.TOP, fill=tk.X)
-            self.l10e = ttk.Entry(self.inTable, width=15)
-            self.l10e.pack(fill=tk.X)
-
-            self.l11 = tk.Label(self.inTable, text=f"{buflist[10]}", bd=0, justify=CENTER, height=1, font=('', 18))
-            self.l11.pack(side=tk.TOP, fill=tk.X)
-            self.l11e = ttk.Entry(self.inTable, width=15)
-            self.l11e.pack(fill=tk.X)
+            # self.l10 = tk.Label(self.inTable, text=f"{buflist[9]}", bd=0, justify=CENTER, height=1, font=('', 18))
+            # self.l10.pack(side=tk.TOP, fill=tk.X)
+            # self.l10e = ttk.Entry(self.inTable, width=15)
+            # self.l10e.pack(fill=tk.X)
+            #
+            # self.l11 = tk.Label(self.inTable, text=f"{buflist[10]}", bd=0, justify=CENTER, height=1, font=('', 18))
+            # self.l11.pack(side=tk.TOP, fill=tk.X)
+            # self.l11e = ttk.Entry(self.inTable, width=15)
+            # self.l11e.pack(fill=tk.X)
 
             self.l1 = tk.Frame(self.inTable, bg="#107eaf", width=300, height=600)
             self.l1.pack(side=tk.BOTTOM, fill=tk.X)
             self.inputButton = tk.Button(self.inTable, text="Добавить", fg="black", width=15, font=('', 15))
-            self.inputButton.place(x=15, y=735)
+            self.inputButton.place(x=15, y=635)
             self.closeB = tk.Button(self.inTable, text='Закрыть', fg="black", width=15, font=('', 15),
                                     command=inputTableWin.destroy)
-            self.closeB.place(x=205, y=735)
+            self.closeB.place(x=205, y=635)
 
         if tablename == "naryad":
             buflist = list_naryad
@@ -804,6 +789,189 @@ class mainProgramm(tk.Frame):
             self.closeB = tk.Button(self.inTable, text='Закрыть', fg="black", width=15, font=('', 15),
                                     command=inputTableWin.destroy)
             self.closeB.place(x=205, y=500)
+
+        if tablename == "ttn":
+            buflist = list_ttn
+            inputTableWin = tk.Toplevel(self)
+            inputTableWin.title("Добавление в ТТН")
+            inputTableWin.geometry('400x800')
+            inputTableWin.resizable(False, False)
+
+            self.inTable = tk.Frame(inputTableWin)
+            self.inTable.place(relwidth=1, relheight=1)
+
+            self.l1 = tk.Label(self.inTable, text=f"{buflist[0]}", bd=0, justify=CENTER, height=2, font=('', 18))
+            self.l1.pack(side=tk.TOP, fill=tk.X)
+            self.l1e = ttk.Entry(self.inTable, width=15)
+            self.l1e.pack(fill=tk.X)
+
+            self.l2 = tk.Label(self.inTable, text=f"{buflist[1]}", bd=0, justify=CENTER, height=2, font=('', 18))
+            self.l2.pack(side=tk.TOP, fill=tk.X)
+            self.l2e = ttk.Entry(self.inTable, width=15)
+            self.l2e.pack(fill=tk.X)
+
+            self.l3 = tk.Label(self.inTable, text=f"{buflist[2]}", bd=0, justify=CENTER, height=2, font=('', 18))
+            self.l3.pack(side=tk.TOP, fill=tk.X)
+            self.l3e = ttk.Entry(self.inTable, width=15)
+            self.l3e.pack(fill=tk.X)
+
+            self.l4 = tk.Label(self.inTable, text=f"{buflist[3]}", bd=0, justify=CENTER, height=2, font=('', 18))
+            self.l4.pack(side=tk.TOP, fill=tk.X)
+            self.l4e = ttk.Entry(self.inTable, width=15)
+            self.l4e.pack(fill=tk.X)
+
+            self.l5 = tk.Label(self.inTable, text=f"{buflist[4]}", bd=0, justify=CENTER, height=2, font=('', 18))
+            self.l5.pack(side=tk.TOP, fill=tk.X)
+            self.l5e = ttk.Entry(self.inTable, width=15)
+            self.l5e.pack(fill=tk.X)
+
+            self.l6 = tk.Label(self.inTable, text=f"{buflist[5]}", bd=0, justify=CENTER, height=2, font=('', 18))
+            self.l6.pack(side=tk.TOP, fill=tk.X)
+            self.l6e = ttk.Entry(self.inTable, width=15)
+            self.l6e.pack(fill=tk.X)
+
+            self.l7 = tk.Label(self.inTable, text=f"{buflist[6]}", bd=0, justify=CENTER, height=1, font=('', 18))
+            self.l7.pack(side=tk.TOP, fill=tk.X)
+            self.l7e = ttk.Entry(self.inTable, width=15)
+            self.l7e.pack(fill=tk.X)
+
+            self.l8 = tk.Label(self.inTable, text=f"{buflist[7]}", bd=0, justify=CENTER, height=1, font=('', 18))
+            self.l8.pack(side=tk.TOP, fill=tk.X)
+            self.l8e = ttk.Entry(self.inTable, width=15)
+            self.l8e.pack(fill=tk.X)
+
+            self.l9 = tk.Label(self.inTable, text=f"{buflist[8]}", bd=0, justify=CENTER, height=1, font=('', 18))
+            self.l9.pack(side=tk.TOP, fill=tk.X)
+            self.l9e = ttk.Entry(self.inTable, width=15)
+            self.l9e.pack(fill=tk.X)
+
+            self.l10 = tk.Label(self.inTable, text=f"{buflist[9]}", bd=0, justify=CENTER, height=1, font=('', 18))
+            self.l10.pack(side=tk.TOP, fill=tk.X)
+            self.l10e = ttk.Entry(self.inTable, width=15)
+            self.l10e.pack(fill=tk.X)
+
+            self.l11 = tk.Label(self.inTable, text=f"{buflist[10]}", bd=0, justify=CENTER, height=1, font=('', 18))
+            self.l11.pack(side=tk.TOP, fill=tk.X)
+            self.l11e = ttk.Entry(self.inTable, width=15)
+            self.l11e.pack(fill=tk.X)
+
+            self.l1 = tk.Frame(self.inTable, bg="#107eaf", width=300, height=600)
+            self.l1.pack(side=tk.BOTTOM, fill=tk.X)
+            self.inputButton = tk.Button(self.inTable, text="Добавить", fg="black", width=15, font=('', 15))
+            self.inputButton.place(x=15, y=735)
+            self.closeB = tk.Button(self.inTable, text='Закрыть', fg="black", width=15, font=('', 15),
+                                    command=inputTableWin.destroy)
+            self.closeB.place(x=205, y=735)
+
+        if tablename == "prihfile":
+            buflist = list_prihod
+            inputTableWin = tk.Toplevel(self)
+            inputTableWin.title("Добавление в приход")
+            inputTableWin.geometry('400x600')
+            inputTableWin.resizable(False, False)
+
+            self.inTable = tk.Frame(inputTableWin)
+            self.inTable.place(relwidth=1, relheight=1)
+
+            self.l1 = tk.Label(self.inTable, text=f"{buflist[0]}", bd=0, justify=CENTER, height=2, font=('', 18))
+            self.l1.pack(side=tk.TOP, fill=tk.X)
+            self.l1e = ttk.Entry(self.inTable, width=15)
+            self.l1e.pack(fill=tk.X)
+
+            self.l2 = tk.Label(self.inTable, text=f"{buflist[1]}", bd=0, justify=CENTER, height=2, font=('', 18))
+            self.l2.pack(side=tk.TOP, fill=tk.X)
+            self.l2e = ttk.Entry(self.inTable, width=15)
+            self.l2e.pack(fill=tk.X)
+
+            self.l3 = tk.Label(self.inTable, text=f"{buflist[2]}", bd=0, justify=CENTER, height=2, font=('', 18))
+            self.l3.pack(side=tk.TOP, fill=tk.X)
+            self.l3e = ttk.Entry(self.inTable, width=15)
+            self.l3e.pack(fill=tk.X)
+
+            self.l4 = tk.Label(self.inTable, text=f"{buflist[3]}", bd=0, justify=CENTER, height=2, font=('', 18))
+            self.l4.pack(side=tk.TOP, fill=tk.X)
+            self.l4e = ttk.Entry(self.inTable, width=15)
+            self.l4e.pack(fill=tk.X)
+
+            self.l5 = tk.Label(self.inTable, text=f"{buflist[4]}", bd=0, justify=CENTER, height=2, font=('', 18))
+            self.l5.pack(side=tk.TOP, fill=tk.X)
+            self.l5e = ttk.Entry(self.inTable, width=15)
+            self.l5e.pack(fill=tk.X)
+
+            self.l6 = tk.Label(self.inTable, text=f"{buflist[5]}", bd=0, justify=CENTER, height=2, font=('', 18))
+            self.l6.pack(side=tk.TOP, fill=tk.X)
+            self.l6e = ttk.Entry(self.inTable, width=15)
+            self.l6e.pack(fill=tk.X)
+
+            self.l7 = tk.Label(self.inTable, text=f"{buflist[6]}", bd=0, justify=CENTER, height=1, font=('', 18))
+            self.l7.pack(side=tk.TOP, fill=tk.X)
+            self.l7e = ttk.Entry(self.inTable, width=15)
+            self.l7e.pack(fill=tk.X)
+
+            self.l10 = tk.Label(self.inTable, text=f"{buflist[9]}", bd=0, justify=CENTER, height=1, font=('', 18))
+            self.l10.pack(side=tk.TOP, fill=tk.X)
+            self.l10e = ttk.Entry(self.inTable, width=15)
+            self.l10e.pack(fill=tk.X)
+
+            self.l1 = tk.Frame(self.inTable, bg="#107eaf", width=300, height=600)
+            self.l1.pack(side=tk.BOTTOM, fill=tk.X)
+
+            self.inputButton = tk.Button(self.inTable, text="Добавить", fg="black", width=15, font=('', 15))
+            self.inputButton.place(x=10, y=550)
+
+            self.closeB = tk.Button(self.inTable, text='Закрыть', fg="black", width=15, font=('', 15),
+                                    command=inputTableWin.destroy)
+            self.closeB.place(x=210, y=550)
+
+        if tablename == "rashfile":
+            buflist = list_rashod
+            inputTableWin = tk.Toplevel(self)
+            inputTableWin.title("Добавление в файл расхода")
+            inputTableWin.geometry('400x500')
+            inputTableWin.resizable(False, False)
+
+            self.inTable = tk.Frame(inputTableWin)
+            self.inTable.place(relwidth=1, relheight=1)
+
+            self.l1 = tk.Label(self.inTable, text=f"{buflist[0]}", bd=0, justify=CENTER, height=2, font=('', 18))
+            self.l1.pack(side=tk.TOP, fill=tk.X)
+            self.l1e = ttk.Entry(self.inTable, width=15)
+            self.l1e.pack(fill=tk.X)
+
+            self.l2 = tk.Label(self.inTable, text=f"{buflist[1]}", bd=0, justify=CENTER, height=2, font=('', 18))
+            self.l2.pack(side=tk.TOP, fill=tk.X)
+            self.l2e = ttk.Entry(self.inTable, width=15)
+            self.l2e.pack(fill=tk.X)
+
+            self.l3 = tk.Label(self.inTable, text=f"{buflist[2]}", bd=0, justify=CENTER, height=2, font=('', 18))
+            self.l3.pack(side=tk.TOP, fill=tk.X)
+            self.l3e = ttk.Entry(self.inTable, width=15)
+            self.l3e.pack(fill=tk.X)
+
+            self.l4 = tk.Label(self.inTable, text=f"{buflist[3]}", bd=0, justify=CENTER, height=2, font=('', 18))
+            self.l4.pack(side=tk.TOP, fill=tk.X)
+            self.l4e = ttk.Entry(self.inTable, width=15)
+            self.l4e.pack(fill=tk.X)
+
+            self.l5 = tk.Label(self.inTable, text=f"{buflist[4]}", bd=0, justify=CENTER, height=2, font=('', 18))
+            self.l5.pack(side=tk.TOP, fill=tk.X)
+            self.l5e = ttk.Entry(self.inTable, width=15)
+            self.l5e.pack(fill=tk.X)
+
+            self.l6 = tk.Label(self.inTable, text=f"{buflist[7]}", bd=0, justify=CENTER, height=2, font=('', 18))
+            self.l6.pack(side=tk.TOP, fill=tk.X)
+            self.l6e = ttk.Entry(self.inTable, width=15)
+            self.l6e.pack(fill=tk.X)
+
+            self.l1 = tk.Frame(self.inTable, bg="#107eaf", width=300, height=600)
+            self.l1.pack(side=tk.BOTTOM, fill=tk.X)
+
+            self.inputButton = tk.Button(self.inTable, text="Добавить", fg="black", width=15, font=('', 15))
+            self.inputButton.place(x=10, y=450)
+
+            self.closeB = tk.Button(self.inTable, text='Закрыть', fg="black", width=15, font=('', 15),
+                                    command=inputTableWin.destroy)
+            self.closeB.place(x=210, y=450)
 
 
 
