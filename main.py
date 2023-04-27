@@ -1045,7 +1045,28 @@ class mainProgramm(tk.Frame):
             	                            "code_gsm", "name_gsm", "unit") VALUES 
             	                            ('{value1}','{value2}', '{value3}') """)
             except Exception as _ex:
-                print("Действие не выполнено")
+                self.errorWindows()
+
+    def errorWindows(self):
+        w = win.winfo_screenwidth()
+        h = win.winfo_screenheight()
+        w = (w // 2) - 200
+        h = (h // 2) - 200
+        errorWindow = tk.Toplevel(self)
+        errorWindow.title("Ошибка ввода")
+        errorWindow.geometry('300x150+{}+{}'.format(w, h))
+        errorWindow.resizable(False, False)
+
+        self.errorWindowFrame = tk.Frame(errorWindow)
+        self.errorWindowFrame.place(relwidth=1, relheight=1)
+
+        self.errorLabel = tk.Label(self.errorWindowFrame, text="Некорректный данные !",
+                                   font=('', 14))
+        self.errorLabel.pack(expand=1, pady=35)
+
+        self.repeatButton = tk.Button(self.errorWindowFrame, text="Повторить", width=20, font=('', 12),
+                                      command=errorWindow.destroy)
+        self.repeatButton.pack(side=tk.BOTTOM, pady=5)
 
 
 
