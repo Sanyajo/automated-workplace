@@ -635,64 +635,50 @@ class mainProgramm(tk.Frame):
             self.inTable = tk.Frame(inputTableWin)
             self.inTable.place(relwidth=1, relheight=1)
 
-            self.l1 = tk.Label(self.inTable, text=f"{buflist[0]}", bd=0, justify=CENTER, height=2, font=('', 18))
+            self.l0 = tk.Label(self.inTable, text=f"{buflist[0]}", bd=0, justify=CENTER, height=2, font=('', 18))
+            self.l0.pack(side=tk.TOP, fill=tk.X)
+            self.l0e = ttk.Entry(self.inTable, width=15)
+            self.l0e.pack(fill=tk.X)
+
+            self.l1 = tk.Label(self.inTable, text=f"{buflist[1]}", bd=0, justify=CENTER, height=2, font=('', 18))
             self.l1.pack(side=tk.TOP, fill=tk.X)
             self.l1e = ttk.Entry(self.inTable, width=15)
             self.l1e.pack(fill=tk.X)
 
-            self.l2 = tk.Label(self.inTable, text=f"{buflist[1]}", bd=0, justify=CENTER, height=2, font=('', 18))
+            self.l2 = tk.Label(self.inTable, text=f"{buflist[2]}", bd=0, justify=CENTER, height=2, font=('', 18))
             self.l2.pack(side=tk.TOP, fill=tk.X)
             self.l2e = ttk.Entry(self.inTable, width=15)
             self.l2e.pack(fill=tk.X)
 
-            self.l3 = tk.Label(self.inTable, text=f"{buflist[2]}", bd=0, justify=CENTER, height=2, font=('', 18))
+            self.l3 = tk.Label(self.inTable, text=f"{buflist[3]}", bd=0, justify=CENTER, height=2, font=('', 18))
             self.l3.pack(side=tk.TOP, fill=tk.X)
             self.l3e = ttk.Entry(self.inTable, width=15)
             self.l3e.pack(fill=tk.X)
 
-            self.l4 = tk.Label(self.inTable, text=f"{buflist[3]}", bd=0, justify=CENTER, height=2, font=('', 18))
+            self.l4 = tk.Label(self.inTable, text=f"{buflist[4]}", bd=0, justify=CENTER, height=2, font=('', 18))
             self.l4.pack(side=tk.TOP, fill=tk.X)
             self.l4e = ttk.Entry(self.inTable, width=15)
             self.l4e.pack(fill=tk.X)
 
-            self.l5 = tk.Label(self.inTable, text=f"{buflist[4]}", bd=0, justify=CENTER, height=2, font=('', 18))
+            self.l5 = tk.Label(self.inTable, text=f"{buflist[5]}", bd=0, justify=CENTER, height=2, font=('', 18))
             self.l5.pack(side=tk.TOP, fill=tk.X)
             self.l5e = ttk.Entry(self.inTable, width=15)
             self.l5e.pack(fill=tk.X)
 
-            self.l6 = tk.Label(self.inTable, text=f"{buflist[5]}", bd=0, justify=CENTER, height=2, font=('', 18))
+            self.l6 = tk.Label(self.inTable, text=f"{buflist[6]}", bd=0, justify=CENTER, height=1, font=('', 18))
             self.l6.pack(side=tk.TOP, fill=tk.X)
             self.l6e = ttk.Entry(self.inTable, width=15)
             self.l6e.pack(fill=tk.X)
 
-            self.l7 = tk.Label(self.inTable, text=f"{buflist[6]}", bd=0, justify=CENTER, height=1, font=('', 18))
-            self.l7.pack(side=tk.TOP, fill=tk.X)
-            self.l7e = ttk.Entry(self.inTable, width=15)
-            self.l7e.pack(fill=tk.X)
-
-            self.l8 = tk.Label(self.inTable, text=f"{buflist[7]}", bd=0, justify=CENTER, height=1, font=('', 18))
+            self.l8 = tk.Label(self.inTable, text=f"{buflist[8]}", bd=0, justify=CENTER, height=1, font=('', 18))
             self.l8.pack(side=tk.TOP, fill=tk.X)
             self.l8e = ttk.Entry(self.inTable, width=15)
             self.l8e.pack(fill=tk.X)
 
-            self.l9 = tk.Label(self.inTable, text=f"{buflist[8]}", bd=0, justify=CENTER, height=1, font=('', 18))
-            self.l9.pack(side=tk.TOP, fill=tk.X)
-            self.l9e = ttk.Entry(self.inTable, width=15)
-            self.l9e.pack(fill=tk.X)
-
-            # self.l10 = tk.Label(self.inTable, text=f"{buflist[9]}", bd=0, justify=CENTER, height=1, font=('', 18))
-            # self.l10.pack(side=tk.TOP, fill=tk.X)
-            # self.l10e = ttk.Entry(self.inTable, width=15)
-            # self.l10e.pack(fill=tk.X)
-            #
-            # self.l11 = tk.Label(self.inTable, text=f"{buflist[10]}", bd=0, justify=CENTER, height=1, font=('', 18))
-            # self.l11.pack(side=tk.TOP, fill=tk.X)
-            # self.l11e = ttk.Entry(self.inTable, width=15)
-            # self.l11e.pack(fill=tk.X)
 
             self.fram1 = tk.Frame(self.inTable, bg="#107eaf", width=300, height=600)
             self.fram1.pack(side=tk.BOTTOM, fill=tk.X)
-            self.inputButton = tk.Button(self.inTable, text="Добавить", fg="black", width=15, font=('', 15))
+            self.inputButton = tk.Button(self.inTable, text="Добавить", fg="black", width=15, font=('', 15), command=partial(self.inputTableSQL, "deliverycontract"))
             self.inputButton.place(x=15, y=635)
             self.closeB = tk.Button(self.inTable, text='Закрыть', fg="black", width=15, font=('', 15),
                                     command=inputTableWin.destroy)
@@ -736,7 +722,7 @@ class mainProgramm(tk.Frame):
             self.fram1 = tk.Frame(self.inTable, bg="#107eaf", width=300, height=600)
             self.fram1.pack(side=tk.BOTTOM, fill=tk.X)
 
-            self.inputButton = tk.Button(self.inTable, text="Добавить", fg="black", width=18, font=('', 15))
+            self.inputButton = tk.Button(self.inTable, text="Добавить", fg="black", width=18, font=('', 15), command=partial(self.inputTableSQL, "naryad"))
             self.inputButton.place(x=90, y=500)
 
             self.closeB = tk.Button(self.inTable, text='Закрыть', fg="black", width=18, font=('', 15),
@@ -1075,6 +1061,42 @@ class mainProgramm(tk.Frame):
             	                            ('{value1}','{value2}', '{value3}', '{value4}', '{value5}', '{value6}', '{value7}', '{value8}') """)
             except Exception as _ex:
                 self.errorWindows()
+
+        if tablename == "deliverycontract":
+            value0 = self.l0e.get()
+            value1 = self.l1e.get()
+            value2 = self.l2e.get()
+            value3 = self.l3e.get()
+            value4 = self.l4e.get()
+            value5 = float(self.l5e.get())
+            value6 = float(self.l6e.get())
+            value7 =  value5 * value6
+            value8 = float(self.l8e.get())
+            value9 = float(value7*value8) /100.0
+            value10= value9+value7
+            try:
+                with conn.cursor() as cursor:
+                    cursor.execute(f"""INSERT INTO "{tablename}"(
+            	                            "contract_number", "date_contract", "code_gsm", "code_post", "untill", "price", "amount", "stoim", "rate_nds", "price_nds", "price_of_nds") VALUES 
+            	                            ('{value0}','{value1}', '{value2}', '{value3}', '{value4}', {value5}, {value6}, {value7}, {value8}, {value9}, {value10} )""")
+            except Exception as _ex:
+                self.errorWindows()
+
+        if tablename == "naryad":
+            value1 = self.l1e.get()
+            value2 = self.l2e.get()
+            value3 = self.l3e.get()
+            value4 = self.l4e.get()
+            value5 = self.l5e.get()
+            try:
+                with conn.cursor() as cursor:
+                    cursor.execute(f"""INSERT INTO "{tablename}"(
+                               	                "nar_number", "tab_number", "drivers_name", "national_avto_num","num_drivlicens") VALUES 
+                               	                ('{value1}','{value2}', '{value3}', '{value4}', '{value5}') """)
+            except Exception as _ex:
+                self.errorWindows()
+
+
 
 
 
