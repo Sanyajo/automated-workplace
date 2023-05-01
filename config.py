@@ -130,3 +130,16 @@ searhSQLList = {
     ('ttn','КодПост'):'code_post',
     ('ttn','ЕдИзм'):'untill'
 }
+
+searhComboboxList = {
+    'typegsm':slist_typegsm,
+    'vendorgsm':slist_vendorgsm,
+    'companydrivers':slist_companydrivers,
+    'deliverycontract':slist_deliverycontract,
+    'naryad':slist_naryad,
+    'pl':slist_pl,
+    'prihod':slist_prihod,
+    'rashod':slist_rashod,
+    'ksu':slist_ksu,
+    'ttn':slist_ttn
+}

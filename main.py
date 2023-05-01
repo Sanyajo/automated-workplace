@@ -1151,29 +1151,7 @@ class mainProgramm(tk.Frame):
 
     def serCH(self, tablename):
 
-        if tablename == "typegsm":
-            val = slist_typegsm
-        if tablename == "vendorgsm":
-            val = slist_vendorgsm
-        if tablename == "ttn":
-            val = slist_ttn
-        if tablename == "rashfile":
-            val = slist_rashod
-        if tablename == "prihfile":
-            val = slist_prihod
-        if tablename == "pl":
-            val = slist_pl
-        if tablename == "naryad":
-            val = slist_naryad
-        if tablename == "ksu":
-            val = slist_ksu
-        if tablename == "deliverycontract":
-            val = slist_deliverycontract
-        if tablename == "comptechnmeans":
-            val = slist_comptechnmeans
-        if tablename == "companydrivers":
-            val = slist_companydrivers
-
+        val = searhComboboxList[tablename]
         serTable = tk.Toplevel(self)
         serTable.title("Поиск")
         serTable.geometry('300x100')
