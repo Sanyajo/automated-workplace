@@ -143,3 +143,16 @@ searhComboboxList = {
     'ksu':slist_ksu,
     'ttn':slist_ttn
 }
+
+searhComboboxList1 = {
+    'typegsm':list_typegsm,
+    'vendorgsm':list_vendorgsm,
+    'companydrivers':list_companydrivers,
+    'deliverycontract':list_deliverycontract,
+    'naryad':list_naryad,
+    'pl':list_pl,
+    'prihod':list_prihod,
+    'rashod':list_rashod,
+    'ksu':list_ksu,
+    'ttn':list_ttn
+}

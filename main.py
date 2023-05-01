@@ -868,7 +868,6 @@ class mainProgramm(tk.Frame):
             self.closeB = tk.Button(self.inTable, text='Закрыть', fg="black", width=15, font=('', 15),
                                     command=inputTableWin.destroy)
             self.closeB.place(x=205, y=735)
-
     def inputTableSQL(self, column_names, tablename, tablenamerus):
         if tablename == "typegsm":
             check = False
@@ -1034,7 +1033,6 @@ class mainProgramm(tk.Frame):
                 self.errorWindows()
 
 
-
     def errorWindows(self):
         w = win.winfo_screenwidth()
         h = win.winfo_screenheight()
@@ -1107,28 +1105,7 @@ class mainProgramm(tk.Frame):
             except Exception as _ex:
                 self.errorWindows()
 
-        if tablename == "typegsm":
-            val = list_typegsm
-        if tablename == "vendorgsm":
-            val = list_vendorgsm
-        if tablename == "ttn":
-            val = list_ttn
-        if tablename == "rashfile":
-            val = list_rashod
-        if tablename == "prihfile":
-            val = list_prihod
-        if tablename == "pl":
-            val = list_pl
-        if tablename == "naryad":
-            val = list_naryad
-        if tablename == "ksu":
-            val = list_ksu
-        if tablename == "deliverycontract":
-            val = list_deliverycontract
-        if tablename == "comptechnmeans":
-            val = list_comptechnmeans
-        if tablename == "companydrivers":
-            val = list_companydrivers
+        val = searhComboboxList1[tablename]
 
         self.TBL = ttk.Treeview(self.dtable, height=22, columns=val, show="headings")
         self.TBL.pack(fill=X)
