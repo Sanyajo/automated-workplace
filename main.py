@@ -3,32 +3,66 @@ from tkinter import *
 from tkinter import ttk
 from PIL import Image, ImageTk
 import psycopg2
-from config import host, user, password, db_name
+from config import *
 from functools import partial
 import time
+import datetime
+
+import subprocess
+import gzip
+import os
+
+
 # import markdown
 # import tempfile
 # from docxtpl import DocxTemplate
-
-list_typegsm = ['Код ГСМ', 'Название ГСМ', 'Единица измерения']
-list_vendorgsm=['Код поставщика', 'Название производителя', 'Адрес производителя', 'Код ГСМ']
-list_companydrivers=['Табельный номер\n водителя', 'ФИО водителя', 'Государственный но\nмер прикрепленного авто', 'Дата приема\n на работу', '\tДата выдачи\n водительсокого удостоверения', '\tДата действия\n водительсокого удостоверения', 'Номер водительского\n удостоверения', 'Категория водительского\n удостоверения']
-list_comptechnmeans=['Код гаражный', 'НомГосРегистр', 'Марка авто', 'Номер кузова', 'ЕдИмз', 'Грузоподъёмность', 'Год выпусмка', 'Первичная стоимость', 'Код %', 'Остаточная стоимость']
-list_deliverycontract=['Номер договора','Дата заключения\n договора','Код ГСМ','Код поставщика','Единица\n измерения','Цена','Количество','Стоимость','Ставка НДС','Сумма НДС','Сумма с НДС']
-list_naryad=['Номер наряда','Табельный номер\nводителя','ФИО водителя','Государственный номер\nавто','Номер водительского\n удостоверения']
-list_pl=['Номер путевого\nлиста','Дата составления ПЛ','Номер водительского\nудостоверения','Табельный номер\nводителя','Государственный номер\nавто']
-list_prihod=['Номер документа','Дата составленеия','Номер ТТН','Дата ТТН','Код ГСМ','Код поставщика','Единица измерения','Количество','Цена','Ставка НДС']
-list_rashod=['Номер документа','Номер ПЛ','Дата ПЛ','Код ГСМ','Единица измерения','Количество','Цена','Ставка НДС']
-list_ksu=['Номер склада','Номер цистерны','Номер документа','Код ГСМ','Код поставщика','Дата оставления\nКСУ','Единица измерения','Стоимость единицы','Остаток на начало\nпериода','Количество прихода','Количество расхода','Остаток на конец\nпериода']
-list_ttn=['Номер документа','Дата ТТН','Код ГСМ','Код поставщика','Единица измерения','Цена','Количество','Стоимость','Ставка НДС','Сумма НДС','Сумма с НДС']
 
 conn = psycopg2.connect(
         host = host,
         user = user,
         password = password,
-        database = db_name
+        database = db_name,
+        port = "5432"
         )
 conn.autocommit = True
+
+class progrload(tk.Frame):
+    def __init__(self, win):
+        super().__init__(win)
+        self.progbar()
+
+    def progbar(self):
+        w = win.winfo_screenwidth()
+        h = win.winfo_screenheight()
+        w = (w // 2) - 200
+        h = (h // 2) - 200
+
+        win.title('АРМ')
+        win.geometry('500x400+{}+{}'.format(w, h))
+        win.resizable(False, False)
+        self.frame = tk.Frame(win, bg= "#4d4f4c")
+        self.frame.place(relwidth=1, relheight=1)
+
+        value_var = IntVar()
+        value = 10
+
+        img = Image.open("logo2.png")
+        self.tkimage = ImageTk.PhotoImage(img)
+        self.l3 = tk.Label(self.frame, image=self.tkimage, bg="#4d4f4c")
+        self.l3.pack(expand=1)
+
+        self.progressbar = ttk.Progressbar(orient="horizontal", variable=value_var, maximum=100)
+        self.progressbar.pack(side = tk.BOTTOM, fill = tk.X)
+
+        self.label = ttk.Label(self.frame, textvariable=value_var)
+        self.progressbar.start()
+
+        while True:
+            self.frame.update()
+            if value_var.get() == 11:
+                self.progressbar.stop()
+                loginSystem(win)
+                break
 
 class loginSystem(tk.Frame):
 
@@ -93,7 +127,6 @@ class loginSystem(tk.Frame):
             self.repeatButton=tk.Button(self.errorWindowFrame, text="Повторить",width=20,font=('',12),command=errorWindow.destroy)
             self.repeatButton.pack(side=tk.BOTTOM,pady=5)
 
-
 class mainProgramm(tk.Frame):
 
     def __init__(self,win):
@@ -127,6 +160,9 @@ class mainProgramm(tk.Frame):
         self.othetButton = tk.Button(self.frameMain,text="Отчётные документы",fg="black",width=18,font=('',15),command = self.othWindowSp)
         self.othetButton.place(x=555,y=300)
 
+        self.arhbd = tk.Button(self.frameMain,text="Восстановление БД", fg="black", width=18, font=('',15), command = self.arhbutton)
+        self.arhbd.place(x=555, y =435)
+
         self.infoButton = tk.Button(self.frameMain,text="Инфо",fg = "black",width=18,font=('',15),command=self.infoApp)
         self.infoButton.place(x=555,y=475)
 
@@ -148,7 +184,6 @@ class mainProgramm(tk.Frame):
         time_string = time.strftime("%m/%d/%Y", named_tuple)
         self.LogTime=tk.Label(self.frameMain,text=f"Дата входа:\t{time_string}",font=('',16), bg="#4d4f4d")
         self.LogTime.place(x=50,y=450)
-
     #Окно инфо
     def infoApp(self):
         w = win.winfo_screenwidth()
@@ -182,7 +217,6 @@ class mainProgramm(tk.Frame):
         self.closeB.place(x=360, y=535)
 
         f.close()
-
     #Cправочные документы
     def spiskiApp(self):
         w = win.winfo_screenwidth()
@@ -221,7 +255,6 @@ class mainProgramm(tk.Frame):
 
         self.closeB = tk.Button(self.spiskiFrame, text='Закрыть', width=5, font=('', 18), command=spiskiAppWindow.destroy)
         self.closeB.place(x=360, y=535)
-
     #Оперативные документы
     def docApp(self):
         w = win.winfo_screenwidth()
@@ -231,7 +264,7 @@ class mainProgramm(tk.Frame):
 
         docAppWindow = tk.Toplevel(self)
         docAppWindow.title('Оперативные документы')
-        docAppWindow.geometry('800x600+{}+{}'.format(w, h))
+        docAppWindow.geometry('800x700+{}+{}'.format(w, h))
         docAppWindow.resizable(False, False)
 
         self.docFrame = tk.Frame(docAppWindow)
@@ -272,8 +305,7 @@ class mainProgramm(tk.Frame):
         self.botLine.pack(side=tk.BOTTOM, fill=tk.X)
 
         self.closeB = tk.Button(self.docFrame, text='Закрыть', width=5, font=('', 18), command=docAppWindow.destroy)
-        self.closeB.place(x=360, y=535)
-
+        self.closeB.place(x=360, y=635)
     #Отчетные документы
     def othWindowSp(self):
         w = win.winfo_screenwidth()
@@ -312,21 +344,6 @@ class mainProgramm(tk.Frame):
 
         self.closeB = tk.Button(self.othWindow, text='Закрыть', width=5, font=('', 18), command=othWind.destroy)
         self.closeB.place(x=360,y=535)
-
-    #Окно добавления в таблицу
-    def insertTable(self,tablename,list):
-
-        # try:
-        #     pass
-        #     with conn.cursor() as cursor:
-        #         cursor.execute(
-        #             f"""INSERT INTO {tablename} {list_WidyGSM} VALUES
-        #             ('{new_data[0]}', '{new_data[1]}', '{new_data[2]}');"""
-        #         )
-        #         print("[INFO] Insert GOOOD!")
-        # except Exception as _ex:
-            pass
-
     #Окно закрытия приложения
     def closeApp(self):
         w = win.winfo_screenwidth()
@@ -350,7 +367,6 @@ class mainProgramm(tk.Frame):
 
         self.noButton = tk.Button(self.closeWindow, text="Нет",fg='red', width=12, font=('', 12),command=clWin.destroy)
         self.noButton.place(x=150,y=100)
-
     #Простотр содержимого БД
     def viewDB(self, column_names, tablename, tablenamerus):
         viewTableDataBases = tk.Toplevel(self)
@@ -393,33 +409,50 @@ class mainProgramm(tk.Frame):
                 max_width = max([len(str(val)) for j, val in enumerate(row)] + [len(column_names[i])])
                 column_width = screen_width // len(column_names)
                 self.tree.column(column_names[i], width=max_width + 20, anchor=CENTER)
-        #
-        # for person in data:
-        #     self.tree.insert("", END, values=tuple(person))
 
-        self.blueLab = tk.Label(self.viewDB, bg="#107eaf", height=35)
-        self.blueLab.pack(side=tk.BOTTOM, fill = tk.X)
 
-        self.inputButton = tk.Button(self.viewDB, text="Добавить", bd=0, justify=CENTER, width=12, font=('', 18),
-                                     command=partial(self.inputTableWindows, tablename))
-        self.inputButton.place(x=100, y=720)
+        if tablename == "prihfile" or tablename == "rashfile" or tablename == "ksu":
+            self.blueLab = tk.Label(self.viewDB, bg="#107eaf", height=35)
+            self.blueLab.pack(side=tk.BOTTOM, fill=tk.X)
+            self.searchButton = tk.Button(self.viewDB, text="Поиск", bd=0, justify=CENTER, width=12, font=('', 18), command =partial(self.serCH,tablename))
+            self.searchButton.place(x=100, y=720)
 
-        self.changeButton = tk.Button(self.viewDB, text="Изменить", bd=0, justify=CENTER, width=12, font=('', 18))
-        self.changeButton.place(x=300, y=720)
+            self.closeButton = tk.Button(self.viewDB, text="Закрыть", bd=0, justify=CENTER, width=12, font=('', 18),
+                                         command=self.reboot)
+            self.closeButton.place(x=300, y=720)
+        else:
 
-        self.closeButton = tk.Button(self.viewDB, text="Закрыть", bd=0, justify=CENTER, width=12, font=('', 18),
-                                     command=self.reboot)
-        self.closeButton.place(x=500, y=720)
+            self.blueLab = tk.Label(self.viewDB, bg="#107eaf", height=35)
+            self.blueLab.pack(side=tk.BOTTOM, fill = tk.X)
 
+            self.inputButton = tk.Button(self.viewDB, text="Добавить", bd=0, justify=CENTER, width=12, font=('', 18),
+                                         command=partial(self.inputTableWindows, tablename))
+            self.inputButton.place(x=100, y=720)
+
+            self.changeButton = tk.Button(self.viewDB, text="Изменить", bd=0, justify=CENTER, width=12, font=('', 18))
+            self.changeButton.place(x=300, y=720)
+
+            self.deleteButton = tk.Button(self.viewDB, text="Удаление", bd=0, justify=CENTER, width=12, font=('',18))
+            self.deleteButton.place(x=500, y=720)
+
+            self.searchButton = tk.Button(self.viewDB, text="Поиск", bd=0, justify=CENTER, width=12, font=('',18), command =partial(self.serCH,tablename))
+            self.searchButton.place(x=700, y=720)
+
+            self.closeButton = tk.Button(self.viewDB, text="Закрыть", bd=0, justify=CENTER, width=12, font=('', 18),
+                                         command=self.reboot)
+            self.closeButton.place(x=900, y=720)
 
     def reboot(a, _event=None):
         a.destroy()
         mainProgramm(win)
-    #Выход из системы
+    #Выход из системы и архивация бд
     def rebot(a, _event=None):
         a.destroy()
+        os.environ['PGPASSWORD'] = f'{password}'
+        cmd = f'pg_dump -h {host} -p 5432 -U {user} -Fc {db_name} > {db_name}.dump'
+        subprocess.call(cmd, shell=True)
+        del os.environ['PGPASSWORD']
         loginSystem(win)
-
 
     def inputTableWindows(self, tablename):
         if tablename == "typegsm":
@@ -1018,7 +1051,6 @@ class mainProgramm(tk.Frame):
             self.closeB = tk.Button(self.inTable, text='Закрыть', fg="black", width=15, font=('', 15),
                                     command=inputTableWin.destroy)
             self.closeB.place(x=210, y=600)
-
     def inputTableSQL(self, tablename):
         if tablename == "typegsm":
             value1 = self.l1e.get()
@@ -1096,10 +1128,6 @@ class mainProgramm(tk.Frame):
             except Exception as _ex:
                 self.errorWindows()
 
-
-
-
-
     def errorWindows(self):
         w = win.winfo_screenwidth()
         h = win.winfo_screenheight()
@@ -1121,13 +1149,219 @@ class mainProgramm(tk.Frame):
                                       command=errorWindow.destroy)
         self.repeatButton.pack(side=tk.BOTTOM, pady=5)
 
+    def serCH(self, tablename):
+
+        if tablename == "typegsm":
+            val = slist_typegsm
+        if tablename == "vendorgsm":
+            val = slist_vendorgsm
+        if tablename == "ttn":
+            val = slist_ttn
+        if tablename == "rashfile":
+            val = slist_rashod
+        if tablename == "prihfile":
+            val = slist_prihod
+        if tablename == "pl":
+            val = slist_pl
+        if tablename == "naryad":
+            val = slist_naryad
+        if tablename == "ksu":
+            val = slist_ksu
+        if tablename == "deliverycontract":
+            val = slist_deliverycontract
+        if tablename == "comptechnmeans":
+            val = slist_comptechnmeans
+        if tablename == "companydrivers":
+            val = slist_companydrivers
+
+        serTable = tk.Toplevel(self)
+        serTable.title("Поиск")
+        serTable.geometry('300x100')
+        serTable.resizable(False, False)
+
+        self.sTable = tk.Frame(serTable)
+        self.sTable.place(relheight=1, relwidth=1)
+
+        self.combobox = ttk.Combobox(self.sTable, values=val)
+        self.combobox.pack(anchor=NW, padx=6, pady=6)
+
+        self.temp = ttk.Entry(self.sTable, width=15)
+        self.temp.pack(fill=X)
+
+        self.poisk = tk.Button(self.sTable, text="поиск", width=15, command=partial(self.serBD, tablename))
+        self.poisk.pack(fill=X)
+    def serBD(self, tablename):
+        a1 = self.combobox.get()
+        a2 = self.temp.get()
+
+        table = tk.Toplevel(self)
+        table.title("Искомые значения")
+        table.geometry('1920x800')
+        table.resizable(False, False)
+
+        self.dtable = tk.Frame(table)
+        self.dtable.place(relheight=1, relwidth=1)
+        data = ()
+        if a1 in searhListINT:
+            a1 = searhSQLListINT[(tablename,a1)]
+            a2 = float(a2)
+            try:
+                with conn.cursor() as cursor:
+                    cursor.execute(f"""SELECT * FROM {tablename} WHERE {a1} = {a2}
+                                        """)
+                    data = (row for row in cursor.fetchall())
+            except Exception as _ex:
+                self.errorWindows()
+        else:
+            a1 = searhSQLList[(tablename,a1)]
+            try:
+                with conn.cursor() as cursor:
+                    cursor.execute(f"""SELECT * FROM {tablename} WHERE {a1} = '{a2}'
+                                                    """)
+                    data = (row for row in cursor.fetchall())
+            except Exception as _ex:
+                self.errorWindows()
+
+        if tablename == "typegsm":
+            val = list_typegsm
+        if tablename == "vendorgsm":
+            val = list_vendorgsm
+        if tablename == "ttn":
+            val = list_ttn
+        if tablename == "rashfile":
+            val = list_rashod
+        if tablename == "prihfile":
+            val = list_prihod
+        if tablename == "pl":
+            val = list_pl
+        if tablename == "naryad":
+            val = list_naryad
+        if tablename == "ksu":
+            val = list_ksu
+        if tablename == "deliverycontract":
+            val = list_deliverycontract
+        if tablename == "comptechnmeans":
+            val = list_comptechnmeans
+        if tablename == "companydrivers":
+            val = list_companydrivers
+
+        self.TBL = ttk.Treeview(self.dtable, height=22, columns=val, show="headings")
+        self.TBL.pack(fill=X)
+
+        for i in val:
+            self.TBL.heading(f"{i}", text=f"{i}")
+            self.TBL.column(f"{i}", width=10, anchor=CENTER)
+
+        for row in data:
+            self.TBL.insert('', tk.END, values=tuple(row))
+
+        self.blueLab = tk.Label(self.dtable, bg="#107eaf", height=35)
+        self.blueLab.pack(side=tk.BOTTOM, fill=tk.X)
+        self.closeButton = tk.Button(self.dtable, text="Закрыть", bd=0, justify=CENTER, width=12, font=('', 18),
+                                     command=self.reboot)
+        self.closeButton.place(x=900, y = 700)
+
+
+    def arhbutton(self):
+        win.title('Авторизация')
+        win.geometry('300x150')
+        win.resizable(False, False)
+
+        self.frame = tk.Frame(win)
+        self.frame.place(relwidth=1, relheight=1)
+
+        self.lab_Login = tk.Label(self.frame, text="Логин", font=10)
+        self.lab_Login.place(x=40, y=35)
+
+        self.lab_Password = tk.Label(self.frame, text="Пароль", font=15)
+        self.lab_Password.place(x=40, y=80)
+
+        self.inputLogin = ttk.Entry(self.frame, width=15)
+        self.inputLogin.place(x=130, y=33)
+
+        self.inputPassword = ttk.Entry(self.frame, width=15, show="*")
+        self.inputPassword.place(x=130, y=78)
+
+        self.connButton = tk.Button(self.frame, text="Войти", fg="black", width=10, font=('', 12),
+                                    command=self.checkarhbd)
+        self.connButton.pack(side=tk.BOTTOM, pady=10)
+    def checkarhbd(self):
+        global sysAdmin
+        sysAdmin = self.inputLogin.get()
+        if sysAdmin == "sysadmin" and self.inputPassword.get() == "admin":
+            self.destroy()
+            self.frame.destroy()
+            arhBD(win)
+        else:
+            w = win.winfo_screenwidth()
+            h = win.winfo_screenheight()
+            w = (w // 2) - 200
+            h = (h // 2) - 200
+            errorWindow = tk.Toplevel(self)
+            errorWindow.title("Ошибка входа")
+            errorWindow.geometry('300x150+{}+{}'.format(w, h))
+            errorWindow.resizable(False, False)
+
+            self.errorWindowFrame = tk.Frame(errorWindow)
+            self.errorWindowFrame.place(relwidth=1, relheight=1)
+
+            self.errorLabel = tk.Label(self.errorWindowFrame,
+                                       text="Неверный логин или пароль!\nПовторите попытку снова", font=('', 14))
+            self.errorLabel.pack(expand=1, pady=35)
+
+            self.repeatButton = tk.Button(self.errorWindowFrame, text="Повторить", width=20, font=('', 12),
+                                          command=errorWindow.destroy)
+            self.repeatButton.pack(side=tk.BOTTOM, pady=5)
+
+class arhBD(tk.Frame):
+    def __init__(self, win):
+        super().__init__(win)
+        self.startarhbd()
+
+    def startarhbd(self):
+        w = win.winfo_screenwidth()
+        h = win.winfo_screenheight()
+        w = (w // 2) - 200
+        h = (h // 2) - 200
+
+        win.title('Восстановление БД')
+        win.geometry('500x400+{}+{}'.format(w, h))
+        win.resizable(False, False)
+        self.frame = tk.Frame(win, bg="#4d4f4c")
+        self.frame.place(relwidth=1, relheight=1)
+
+        img = Image.open("logo2.png")
+        self.tkimage = ImageTk.PhotoImage(img)
+        self.l3 = tk.Label(self.frame, image=self.tkimage, bg="#4d4f4c")
+        self.l3.pack(expand=1)
+
+        value_var = IntVar()
+        value = 10
+        self.progressbar = ttk.Progressbar(orient="horizontal", variable=value_var, maximum=100)
+        self.progressbar.pack(side=tk.BOTTOM, fill=tk.X)
+
+        self.label = ttk.Label(self.frame, textvariable=value_var)
+        self.progressbar.start()
+
+        dump_file_path = './kurs.dump'
+        os.environ['PGPASSWORD'] = f'{password}'
+        cmd = f'pg_restore -h {host} -p 5432 -U {user} -d kurs3 {dump_file_path}'
+        p = subprocess.Popen(cmd, shell=True)
+        del os.environ['PGPASSWORD']
+
+        while True:
+            self.frame.update()
+            if value_var.get() == 99:
+                self.progressbar.stop()
+                loginSystem(win)
+                break
 
 
 
 
 if __name__ =="__main__":
     win = tk.Tk()
-    start = loginSystem(win)
+    start = progrload(win)
     start.pack()
     # start.destroy()
     # start=mainProgramm(win)
