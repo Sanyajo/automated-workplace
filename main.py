@@ -163,11 +163,8 @@ class mainProgramm(tk.Frame):
         self.arhbd = tk.Button(self.frameMain,text="Восстановление БД", fg="black", width=18, font=('',15), command = self.arhbutton)
         self.arhbd.place(x=555, y =435)
 
-        self.infoButton = tk.Button(self.frameMain,text="Инфо",fg = "black",width=18,font=('',15),command=self.infoApp)
-        self.infoButton.place(x=555,y=475)
-
         self.closeApp = tk.Button(self.frameMain,text="Выход",fg="black",width=18,font=('',15),command=self.closeApp)
-        self.closeApp.place(x=555,y=525)
+        self.closeApp.place(x=555,y=475)
 
         img = Image.open("logo2.png")
         self.tkimage = ImageTk.PhotoImage(img)
@@ -184,39 +181,6 @@ class mainProgramm(tk.Frame):
         time_string = time.strftime("%m/%d/%Y", named_tuple)
         self.LogTime=tk.Label(self.frameMain,text=f"Дата входа:\t{time_string}",font=('',16), bg="#4d4f4d")
         self.LogTime.place(x=50,y=450)
-    #Окно инфо
-    def infoApp(self):
-        w = win.winfo_screenwidth()
-        h = win.winfo_screenheight()
-        w = (w // 2) - 400
-        h = (h // 2) - 400
-
-        infoAppWindow = tk.Toplevel(self)
-        infoAppWindow.title('Инфо')
-        infoAppWindow.geometry('800x600+{}+{}'.format(w, h))
-        infoAppWindow.resizable(False, False)
-
-        self.infoFrame = tk.Frame(infoAppWindow)
-        self.infoFrame.place(relwidth=1, relheight=1)
-
-        self.topLine = tk.Label(self.infoFrame, bg="#107eaf",height=5)
-        self.topLine.pack(side=tk.TOP,fill = tk.X)
-
-        self.topText = tk.Label(self.infoFrame,text="Информация о АРМ",bg="#107eaf", font = ('',18))
-        self.topText.place(x=325,y=30)
-
-        with open('infoProgramm.txt','r') as f:
-            t = f.read()
-        self.infApp = tk.Label(self.infoFrame,text =t,font = ('',18))
-        self.infApp.pack(anchor="n",pady=45)
-
-        self.botLine = tk.Label(self.infoFrame, bg="#107eaf", height=5)
-        self.botLine.pack(side=tk.BOTTOM, fill=tk.X)
-
-        self.closeB = tk.Button(self.infoFrame, text='Закрыть', width=5, font=('', 18), command=infoAppWindow.destroy)
-        self.closeB.place(x=360, y=535)
-
-        f.close()
     #Cправочные документы
     def spiskiApp(self):
         w = win.winfo_screenwidth()
@@ -432,7 +396,7 @@ class mainProgramm(tk.Frame):
             self.changeButton = tk.Button(self.viewDB_frame, text="Изменить", bd=0, justify=CENTER, width=12, font=('', 18))
             self.changeButton.place(x=300, y=720)
 
-            self.deleteButton = tk.Button(self.viewDB_frame, text="Удаление", bd=0, justify=CENTER, width=12, font=('', 18))
+            self.deleteButton = tk.Button(self.viewDB_frame, text="Удаление", bd=0, justify=CENTER, width=12, font=('', 18),command = partial(self.DELButton,  column_names, tablename, tablenamerus))
             self.deleteButton.place(x=500, y=720)
 
             self.searchButton = tk.Button(self.viewDB_frame, text="Поиск", bd=0, justify=CENTER, width=12, font=('', 18), command =partial(self.serCH, tablename))
@@ -450,7 +414,6 @@ class mainProgramm(tk.Frame):
         subprocess.call(cmd, shell=True)
         del os.environ['PGPASSWORD']
         loginSystem(win)
-
     def reboot(a, _event=None):
         a.destroy()
         mainProgramm(win)
@@ -1077,14 +1040,16 @@ class mainProgramm(tk.Frame):
         a1 = self.combobox.get()
         a2 = self.temp.get()
 
-        table = tk.Toplevel(self)
-        table.title("Искомые значения")
-        table.geometry('1920x800')
-        table.resizable(False, False)
+        self.table = tk.Toplevel(self)
+        self.table.title("Искомые значения")
+        screen_width = self.table.winfo_screenwidth()
+        self.table.geometry(f'{screen_width}x800')
+        self.table.resizable(False, False)
 
-        self.dtable = tk.Frame(table)
+
+        self.dtable = tk.Frame(self.table)
         self.dtable.place(relheight=1, relwidth=1)
-        data = ()
+        data = []
         if a1 in searhListINT:
             a1 = searhSQLListINT[(tablename,a1)]
             a2 = float(a2)
@@ -1105,24 +1070,35 @@ class mainProgramm(tk.Frame):
             except Exception as _ex:
                 self.errorWindows()
 
-        val = searhComboboxList1[tablename]
+        column_names = searhComboboxList1[tablename]
 
-        self.TBL = ttk.Treeview(self.dtable, height=22, columns=val, show="headings")
+        self.TBL = ttk.Treeview(self.dtable, height=22, columns=column_names, show="headings")
         self.TBL.pack(fill=X)
 
-        for i in val:
+        total_width = 0
+        for i in column_names:
             self.TBL.heading(f"{i}", text=f"{i}")
-            self.TBL.column(f"{i}", width=10, anchor=CENTER)
+            if i == '№':
+                self.TBL.column(f"{i}", stretch=False)
+                self.TBL.column(f"{i}", width=50)
+                total_width += 50;
+            else:
+                column_width = screen_width // len(column_names)
+                self.TBL.column(f"{i}", width=column_width, stretch=True)
+                total_width += column_width
 
         for row in data:
             self.TBL.insert('', tk.END, values=tuple(row))
+            for i, value in enumerate(row):
+                max_width = max([len(str(val)) for j, val in enumerate(row)] + [len(column_names[i])])
+                column_width = screen_width // len(column_names)
+                self.TBL.column(column_names[i], width=max_width + 20, anchor=CENTER)
 
         self.blueLab = tk.Label(self.dtable, bg="#107eaf", height=35)
         self.blueLab.pack(side=tk.BOTTOM, fill=tk.X)
         self.closeButton = tk.Button(self.dtable, text="Закрыть", bd=0, justify=CENTER, width=12, font=('', 18),
                                      command=self.reboot)
-        self.closeButton.place(x=900, y = 700)
-
+        self.closeButton.place(x=650, y = 700)
 
     def arhbutton(self):
         win.title('Авторизация')
@@ -1174,6 +1150,150 @@ class mainProgramm(tk.Frame):
             self.repeatButton = tk.Button(self.errorWindowFrame, text="Повторить", width=20, font=('', 12),
                                           command=errorWindow.destroy)
             self.repeatButton.pack(side=tk.BOTTOM, pady=5)
+
+    def DELButton(self,column_names, tablename, tablenamerus):
+        if tablename == "typegsm":
+            selection = self.tree.selection()
+            delValue = ''
+            for item in selection:
+                item_id1 = self.tree.item(item, "values")[0]
+                delValue = item_id1
+                print(item_id1)
+            try:
+                with conn.cursor() as cursor:
+                    cursor.execute(f"""DELETE FROM {tablename} WHERE code_gsm='{delValue}' """)
+                    check = True
+                    if check:
+                        self.refresh(column_names, tablename, tablenamerus)
+            except Exception as _ex:
+                print("ERORR")
+
+        if tablename == "vendorgsm":
+            selection = self.tree.selection()
+            delValue1 = ''
+            delValue2 = ''
+            for item in selection:
+                item_id1 = self.tree.item(item, "values")[0]
+                item_id2 = self.tree.item(item, "values")[3]
+                delValue1 = item_id1
+                delValue2 = item_id2
+                print(item_id1,item_id2)
+            try:
+                with conn.cursor() as cursor:
+                    cursor.execute(f"""DELETE FROM {tablename} WHERE code_post='{delValue1}' AND  code_gsm='{delValue2}' """)
+                    check = True
+                    if check:
+                        self.refresh(column_names, tablename, tablenamerus)
+            except Exception as _ex:
+                print("ERORR")
+
+        if tablename == "companydrivers":
+            selection = self.tree.selection()
+            delValue1 = ''
+            for item in selection:
+                item_id1 = self.tree.item(item, "values")[0]
+                delValue1 = item_id1
+                print(item_id1)
+            try:
+                with conn.cursor() as cursor:
+                    cursor.execute(
+                        f"""DELETE FROM {tablename} WHERE tab_number='{delValue1}' """)
+                    check = True
+                    if check:
+                        self.refresh(column_names, tablename, tablenamerus)
+            except Exception as _ex:
+                print("ERORR")
+
+        if tablename == "comptechnmeans":
+            selection = self.tree.selection()
+            delValue1 = ''
+            for item in selection:
+                item_id1 = self.tree.item(item, "values")[0]
+                delValue1 = item_id1
+                print(item_id1)
+            try:
+                with conn.cursor() as cursor:
+                    cursor.execute(
+                        f"""DELETE FROM {tablename} WHERE national_avto_num='{delValue1}' """)
+                    check = True
+                    if check:
+                        self.refresh(column_names, tablename, tablenamerus)
+            except Exception as _ex:
+                print("ERORR")
+
+        if tablename == "deliverycontract":
+            selection = self.tree.selection()
+            delValue1 = ''
+            for item in selection:
+                item_id1 = self.tree.item(item, "values")[0]
+                delValue1 = item_id1
+                print(item_id1)
+            try:
+                with conn.cursor() as cursor:
+                    cursor.execute(
+                        f"""DELETE FROM {tablename} WHERE contract_number='{delValue1}' """)
+                    check = True
+                    if check:
+                        self.refresh(column_names, tablename, tablenamerus)
+            except Exception as _ex:
+                print("ERORR")
+
+        if tablename == "naryad":
+            selection = self.tree.selection()
+            delValue1 = ''
+            delValue2 = ''
+            for item in selection:
+                item_id1 = self.tree.item(item, "values")[0]
+                item_id2 = self.tree.item(item, "values")[1]
+                delValue1 = item_id1
+                delValue2 = item_id2
+                print(item_id1, item_id2)
+            try:
+                with conn.cursor() as cursor:
+                    cursor.execute(
+                        f"""DELETE FROM {tablename} WHERE nar_number='{delValue1}' AND  tab_number='{delValue2}' """)
+                    check = True
+                    if check:
+                        self.refresh(column_names, tablename, tablenamerus)
+            except Exception as _ex:
+                print("ERORR")
+
+        if tablename == "pl":
+            selection = self.tree.selection()
+            delValue1 = ''
+            for item in selection:
+                item_id1 = self.tree.item(item, "values")[0]
+                delValue1 = item_id1
+                print(item_id1)
+            try:
+                with conn.cursor() as cursor:
+                    cursor.execute(
+                        f"""DELETE FROM {tablename} WHERE pl_number='{delValue1}' """)
+                    check = True
+                    if check:
+                        self.refresh(column_names, tablename, tablenamerus)
+            except Exception as _ex:
+                print("ERORR")
+
+        if tablename == "ttn":
+            selection = self.tree.selection()
+            delValue1 = ''
+            delValue2 = ''
+            for item in selection:
+                item_id1 = self.tree.item(item, "values")[0]
+                item_id2 = self.tree.item(item, "values")[1]
+                delValue1 = item_id1
+                delValue2 = item_id2
+                print(item_id1, item_id2)
+            try:
+                with conn.cursor() as cursor:
+                    cursor.execute(
+                        f"""DELETE FROM {tablename} WHERE ttn_number='{delValue1}' AND  date_zakl_ttn='{delValue2}' """)
+                    check = True
+                    if check:
+                        self.refresh(column_names, tablename, tablenamerus)
+            except Exception as _ex:
+                print("ERORR")
 
     def refresh(self, column_names, tablename, tablenamerus):
         self.viewTableDataBases.destroy()
