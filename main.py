@@ -393,10 +393,10 @@ class mainProgramm(tk.Frame):
                                          command=partial(self.inputTableWindows, column_names, tablename, tablenamerus))
             self.inputButton.place(x=100, y=720)
 
-            self.changeButton = tk.Button(self.viewDB_frame, text="Изменить", bd=0, justify=CENTER, width=12, font=('', 18))
+            self.changeButton = tk.Button(self.viewDB_frame, text="Изменить", bd=0, justify=CENTER, width=12, font=('', 18), command = partial(self.upDATE, tablename,column_names, tablenamerus))
             self.changeButton.place(x=300, y=720)
 
-            self.deleteButton = tk.Button(self.viewDB_frame, text="Удаление", bd=0, justify=CENTER, width=12, font=('', 18),command = partial(self.DELButton,  column_names, tablename, tablenamerus))
+            self.deleteButton = tk.Button(self.viewDB_frame, text="Удаление", bd=0, justify=CENTER, width=12, font=('', 18),command = partial(self.DELButton,column_names, tablename, tablenamerus))
             self.deleteButton.place(x=500, y=720)
 
             self.searchButton = tk.Button(self.viewDB_frame, text="Поиск", bd=0, justify=CENTER, width=12, font=('', 18), command =partial(self.serCH, tablename))
@@ -1099,6 +1099,245 @@ class mainProgramm(tk.Frame):
         self.closeButton = tk.Button(self.dtable, text="Закрыть", bd=0, justify=CENTER, width=12, font=('', 18),
                                      command=self.reboot)
         self.closeButton.place(x=650, y = 700)
+
+    def upDATE(self, tablename,column_names, tablenamerus):
+
+        if tablename == "typegsm":
+            selection = self.tree.selection()
+            upValue = []
+            for item in selection:
+                item_id1 = self.tree.item(item, "values")
+                upValue.append(item_id1)
+            buflist = list_typegsm
+
+            serTable = tk.Toplevel(self)
+            serTable.title(f"Изменение в {tablename}")
+            serTable.geometry('300x400')
+            serTable.resizable(False, False)
+
+            self.sTable = tk.Frame(serTable)
+            self.sTable.place(relheight=1, relwidth=1)
+
+            self.l1 = tk.Label(self.sTable, text=f"{buflist[0]}", bd=0, justify=CENTER, height=3, font=('', 18))
+            self.l1.pack(side=tk.TOP, fill=tk.X)
+            self.l1e = ttk.Entry(self.sTable, width=15)
+            self.l1e.insert(0, upValue[0][0])
+            self.l1e.pack(fill=tk.X)
+
+            self.l2 = tk.Label(self.sTable, text=f"{buflist[1]}", bd=0, justify=CENTER, height=3, font=('', 18))
+            self.l2.pack(side=tk.TOP, fill=tk.X)
+            self.l2e = ttk.Entry(self.sTable, width=15)
+            self.l2e.insert(0, upValue[0][1])
+            self.l2e.pack(fill=tk.X)
+
+            self.l3 = tk.Label(self.sTable, text=f"{buflist[2]}", bd=0, justify=CENTER, height=3, font=('', 18))
+            self.l3.pack(side=tk.TOP, fill=tk.X)
+            self.l3e = ttk.Entry(self.sTable, width=15)
+            self.l3e.insert(0, upValue[0][2])
+            self.l3e.pack(fill=tk.X)
+
+            self.fram1 = tk.Frame(self.sTable, bg="#107eaf", width=300, height=600)
+            self.fram1.pack(side=tk.BOTTOM, fill=tk.X)
+
+            self.inputButton = tk.Button(self.sTable, text="Изменить", fg="black", width=18, font=('', 15),
+                                         command=partial(self.upDateSQL,tablename, upValue,column_names, tablenamerus))
+            self.inputButton.place(x=40, y=300)
+
+            self.closeB = tk.Button(self.sTable, text='Закрыть', fg="black", width=18, font=('', 15),
+                                    command=serTable.destroy)
+            self.closeB.place(x=40, y=350)
+
+        # if tablename == "vendorgsm":
+        #     selection = self.tree.selection()
+        #     upValue = []
+        #     for item in selection:
+        #         item_id1 = self.tree.item(item, "values")
+        #         upValue.append(item_id1)
+        #     buflist = list_vendorgsm
+        #
+        #     serTable = tk.Toplevel(self)
+        #     serTable.title(f"Изменение в {tablename}")
+        #     serTable.geometry('300x500')
+        #     serTable.resizable(False, False)
+        #
+        #     self.sTable = tk.Frame(serTable)
+        #     self.sTable.place(relheight=1, relwidth=1)
+        #
+        #     self.l1 = tk.Label(self.sTable, text=f"{buflist[0]}", bd=0, justify=CENTER, height=3, font=('', 18))
+        #     self.l1.pack(side=tk.TOP, fill=tk.X)
+        #     self.l1e = ttk.Entry(self.sTable, width=15)
+        #     self.l1e.insert(0, upValue[0][0])
+        #     self.l1e.pack(fill=tk.X)
+        #
+        #     self.l2 = tk.Label(self.sTable, text=f"{buflist[1]}", bd=0, justify=CENTER, height=3, font=('', 18))
+        #     self.l2.pack(side=tk.TOP, fill=tk.X)
+        #     self.l2e = ttk.Entry(self.sTable, width=15)
+        #     self.l2e.insert(0, upValue[0][1])
+        #     self.l2e.pack(fill=tk.X)
+        #
+        #     self.l3 = tk.Label(self.sTable, text=f"{buflist[2]}", bd=0, justify=CENTER, height=3, font=('', 18))
+        #     self.l3.pack(side=tk.TOP, fill=tk.X)
+        #     self.l3e = ttk.Entry(self.sTable, width=15)
+        #     self.l3e.insert(0, upValue[0][2])
+        #     self.l3e.pack(fill=tk.X)
+        #
+        #     self.l4 = tk.Label(self.sTable, text=f"{buflist[3]}", bd=0, justify=CENTER, height=3, font=('', 18))
+        #     self.l4.pack(side=tk.TOP, fill=tk.X)
+        #     self.l4e = ttk.Entry(self.sTable, width=15)
+        #     self.l4e.insert(0, upValue[0][3])
+        #     self.l4e.pack(fill=tk.X)
+        #
+        # if tablename == "companydrivers":
+        #     selection = self.tree.selection()
+        #     upValue = []
+        #     for item in selection:
+        #         item_id1 = self.tree.item(item, "values")
+        #         upValue.append(item_id1)
+        #     buflist = list_companydrivers
+        #
+        #     serTable = tk.Toplevel(self)
+        #     serTable.title(f"Изменение в {tablename}")
+        #     serTable.geometry('410x800')
+        #     serTable.resizable(False, False)
+        #
+        #     self.sTable = tk.Frame(serTable)
+        #     self.sTable.place(relheight=1, relwidth=1)
+        #
+        #     self.l1 = tk.Label(self.sTable, text=f"{buflist[0]}", bd=0, justify=CENTER, height=2, font=('', 18))
+        #     self.l1.pack(side=tk.TOP, fill=tk.X)
+        #     self.l1e = ttk.Entry(self.sTable, width=15)
+        #     self.l1e.insert(0, upValue[0][0])
+        #     self.l1e.pack(fill=tk.X)
+        #
+        #     self.l2 = tk.Label(self.sTable, text=f"{buflist[1]}", bd=0, justify=CENTER, height=2, font=('', 18))
+        #     self.l2.pack(side=tk.TOP, fill=tk.X)
+        #     self.l2e = ttk.Entry(self.sTable, width=15)
+        #     self.l2e.insert(0, upValue[0][1])
+        #     self.l2e.pack(fill=tk.X)
+        #
+        #     self.l3 = tk.Label(self.sTable, text=f"{buflist[2]}", bd=0, justify=CENTER, height=2, font=('', 18))
+        #     self.l3.pack(side=tk.TOP, fill=tk.X)
+        #     self.l3e = ttk.Entry(self.sTable, width=15)
+        #     self.l3e.insert(0, upValue[0][2])
+        #     self.l3e.pack(fill=tk.X)
+        #
+        #     self.l4 = tk.Label(self.sTable, text=f"{buflist[3]}", bd=0, justify=CENTER, height=2, font=('', 18))
+        #     self.l4.pack(side=tk.TOP, fill=tk.X)
+        #     self.l4e = ttk.Entry(self.sTable, width=15)
+        #     self.l4e.insert(0, upValue[0][3])
+        #     self.l4e.pack(fill=tk.X)
+        #
+        #     self.l5 = tk.Label(self.sTable, text=f"{buflist[4]}", bd=0, justify=CENTER, height=2, font=('', 18))
+        #     self.l5.pack(side=tk.TOP, fill=tk.X)
+        #     self.l5e = ttk.Entry(self.sTable, width=15)
+        #     self.l5e.insert(0, upValue[0][4])
+        #     self.l5e.pack(fill=tk.X)
+        #
+        #     self.l6 = tk.Label(self.sTable, text=f"{buflist[5]}", bd=0, justify=CENTER, height=2, font=('', 18))
+        #     self.l6.pack(side=tk.TOP, fill=tk.X)
+        #     self.l6e = ttk.Entry(self.sTable, width=15)
+        #     self.l6e.insert(0, upValue[0][5])
+        #     self.l6e.pack(fill=tk.X)
+        #
+        #     self.l7 = tk.Label(self.sTable, text=f"{buflist[6]}", bd=0, justify=CENTER, height=2, font=('', 18))
+        #     self.l7.pack(side=tk.TOP, fill=tk.X)
+        #     self.l7e = ttk.Entry(self.sTable, width=15)
+        #     self.l7e.insert(0, upValue[0][6])
+        #     self.l7e.pack(fill=tk.X)
+        #
+        #     self.l8 = tk.Label(self.sTable, text=f"{buflist[7]}", bd=0, justify=CENTER, height=2, font=('', 18))
+        #     self.l8.pack(side=tk.TOP, fill=tk.X)
+        #     self.l8e = ttk.Entry(self.sTable, width=15)
+        #     self.l8e.insert(0, upValue[0][7])
+        #     self.l8e.pack(fill=tk.X)
+        #
+        # if tablename == "comptechnmeans":
+        #     selection = self.tree.selection()
+        #     upValue = []
+        #     for item in selection:
+        #         item_id1 = self.tree.item(item, "values")
+        #         upValue.append(item_id1)
+        #     buflist = list_comptechnmeans
+        #
+        #     serTable = tk.Toplevel(self)
+        #     serTable.title(f"Изменение в {tablename}")
+        #     serTable.geometry('410x800')
+        #     serTable.resizable(False, False)
+        #
+        #     self.sTable = tk.Frame(serTable)
+        #     self.sTable.place(relheight=1, relwidth=1)
+        #
+        #     self.l1 = tk.Label(self.sTable, text=f"{buflist[0]}", bd=0, justify=CENTER, height=2, font=('', 18))
+        #     self.l1.pack(side=tk.TOP, fill=tk.X)
+        #     self.l1e = ttk.Entry(self.sTable, width=15)
+        #     self.l1e.insert(0, upValue[0][0])
+        #     self.l1e.pack(fill=tk.X)
+        #
+        #     self.l2 = tk.Label(self.sTable, text=f"{buflist[1]}", bd=0, justify=CENTER, height=2, font=('', 18))
+        #     self.l2.pack(side=tk.TOP, fill=tk.X)
+        #     self.l2e = ttk.Entry(self.sTable, width=15)
+        #     self.l2e.insert(0, upValue[0][1])
+        #     self.l2e.pack(fill=tk.X)
+        #
+        #     self.l3 = tk.Label(self.sTable, text=f"{buflist[2]}", bd=0, justify=CENTER, height=2, font=('', 18))
+        #     self.l3.pack(side=tk.TOP, fill=tk.X)
+        #     self.l3e = ttk.Entry(self.sTable, width=15)
+        #     self.l3e.insert(0, upValue[0][2])
+        #     self.l3e.pack(fill=tk.X)
+        #
+        #     self.l4 = tk.Label(self.sTable, text=f"{buflist[3]}", bd=0, justify=CENTER, height=2, font=('', 18))
+        #     self.l4.pack(side=tk.TOP, fill=tk.X)
+        #     self.l4e = ttk.Entry(self.sTable, width=15)
+        #     self.l4e.insert(0, upValue[0][3])
+        #     self.l4e.pack(fill=tk.X)
+        #
+        #     self.l5 = tk.Label(self.sTable, text=f"{buflist[4]}", bd=0, justify=CENTER, height=2, font=('', 18))
+        #     self.l5.pack(side=tk.TOP, fill=tk.X)
+        #     self.l5e = ttk.Entry(self.sTable, width=15)
+        #     self.l5e.insert(0, upValue[0][4])
+        #     self.l5e.pack(fill=tk.X)
+        #
+        #     self.l6 = tk.Label(self.sTable, text=f"{buflist[5]}", bd=0, justify=CENTER, height=2, font=('', 18))
+        #     self.l6.pack(side=tk.TOP, fill=tk.X)
+        #     self.l6e = ttk.Entry(self.sTable, width=15)
+        #     self.l6e.insert(0, upValue[0][5])
+        #     self.l6e.pack(fill=tk.X)
+        #
+        #     self.l7 = tk.Label(self.sTable, text=f"{buflist[6]}", bd=0, justify=CENTER, height=2, font=('', 18))
+        #     self.l7.pack(side=tk.TOP, fill=tk.X)
+        #     self.l7e = ttk.Entry(self.sTable, width=15)
+        #     self.l7e.insert(0, upValue[0][6])
+        #     self.l7e.pack(fill=tk.X)
+        #
+        #     self.l8 = tk.Label(self.sTable, text=f"{buflist[7]}", bd=0, justify=CENTER, height=2, font=('', 18))
+        #     self.l8.pack(side=tk.TOP, fill=tk.X)
+        #     self.l8e = ttk.Entry(self.sTable, width=15)
+        #     self.l8e.insert(0, upValue[0][7])
+        #     self.l8e.pack(fill=tk.X)
+        #
+        #     self.l9 = tk.Label(self.sTable, text=f"{buflist[8]}", bd=0, justify=CENTER, height=2, font=('', 18))
+        #     self.l9.pack(side=tk.TOP, fill=tk.X)
+        #     self.l9e = ttk.Entry(self.sTable, width=15)
+        #     self.l9e.insert(0, upValue[0][8])
+        #     self.l9e.pack(fill=tk.X)
+
+    def upDateSQL(self, tablename, upValue,column_names, tablenamerus):
+        if tablename == "typegsm":
+            check = False
+            value1 = self.l1e.get()
+            value2 = self.l2e.get()
+            value3 = self.l3e.get()
+            try:
+                with conn.cursor() as cursor:
+                    cursor.execute(f"""UPDATE {tablename} SET code_gsm='{value1}', name_gsm='{value2}', unit='{value3}'
+                        WHERE code_gsm='{upValue[0][0]}' AND name_gsm='{upValue[0][1]}' AND unit='{upValue[0][2]}' """)
+                    check = True
+                    if check:
+                        self.refresh(column_names, tablename, tablenamerus)
+
+            except Exception as _ex:
+                pass
+
 
     def arhbutton(self):
         win.title('Авторизация')
