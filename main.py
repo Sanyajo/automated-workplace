@@ -65,6 +65,12 @@ class loginSystem(tk.Frame):
     def __init__(self,logWin):
         super().__init__(logWin)
         self.loginSystem()
+
+    def show_password(self):
+        self.inputPassword.config(show="")
+
+    def hide_password(self):
+        self.inputPassword.config(show="*")
     #Окно логина
     def loginSystem(self):
 
@@ -75,23 +81,29 @@ class loginSystem(tk.Frame):
         h=(h//2)-200
 
         win.title('Авторизация')
-        win.geometry('300x150+{}+{}'.format(w, h))
+        win.geometry('400x150+{}+{}'.format(w, h))
         win.resizable(False,False)
 
         self.frame = tk.Frame(win)
         self.frame.place(relwidth=1, relheight=1)
 
         self.lab_Login = tk.Label(self.frame, text = "Логин", font = 10)
-        self.lab_Login.place(x=40,y=35)
+        self.lab_Login.place(x=40,y=15)
 
         self.lab_Password = tk.Label(self.frame,text="Пароль",font = 15)
-        self.lab_Password .place(x=40,y=80)
+        self.lab_Password .place(x=40,y=45)
 
         self.inputLogin = ttk.Entry(self.frame, width=15)
-        self.inputLogin.place(x=130,y=33)
+        self.inputLogin.place(x=130,y=15)
 
         self.inputPassword = ttk.Entry(self.frame, width=15, show = "*")
-        self.inputPassword.place(x=130,y=78)
+        self.inputPassword.place(x=130,y=45)
+
+        self.show_button = tk.Button(self.frame, text="Показать пароль",command=self.show_password)
+        self.show_button.place(x=40,y=78)
+
+        self.hide_button = tk.Button(self.frame, text="Скрыть пароль", fg="black",width=14, font=('',12), command=self.hide_password)
+        self.hide_button.place(x=220,y=78)
 
         self.connButton = tk.Button(self.frame, text="Войти",fg="black",width=10, font=('',12),command=self.checkLogin)
         self.connButton.pack(side=tk.BOTTOM, pady = 10)
@@ -287,16 +299,16 @@ class mainProgramm(tk.Frame):
         self.topText = tk.Label(self.othWindow, text="Отчётные документы", bg="#107eaf", font=('', 18))
         self.topText.place(x=315,y=30)
 
-        self.otButton1 = tk.Button(self.othWindow,text = 'Отчёт по заключенным договорам на поставку ГСМ',bd=0,justify=CENTER,height=3,font=('',18))
+        self.otButton1 = tk.Button(self.othWindow,text = 'Отчёт по заключенным договорам на поставку ГСМ',bd=0,justify=CENTER,height=3,font=('',18), command = self.otch1)
         self.otButton1.pack(side=tk.TOP,fill=X)
 
-        self.otButton2 = tk.Button(self.othWindow,text='Отчёт о движении ГСМ на складе',bd=0,justify=CENTER, height=3, font=('', 18))
+        self.otButton2 = tk.Button(self.othWindow,text='Отчёт о движении ГСМ на складе',bd=0,justify=CENTER, height=3, font=('', 18), command = self.otch2)
         self.otButton2.pack(side=tk.TOP,fill=X)
 
-        self.otButton3 = tk.Button(self.othWindow, text='Отчёт по водителям',bd=0, justify=CENTER, height=3,font=('',18))
+        self.otButton3 = tk.Button(self.othWindow, text='Отчёт по водителям',bd=0, justify=CENTER, height=3,font=('',18), command = self.otch3SQL)
         self.otButton3.pack(side=tk.TOP, fill=X)
 
-        self.otButton4 = tk.Button(self.othWindow, text='Отчёт по путевым листам',bd=0, justify=CENTER, height=3,font=('', 18))
+        self.otButton4 = tk.Button(self.othWindow, text='Отчёт по путевым листам',bd=0, justify=CENTER, height=3,font=('', 18), command = self.otch4)
         self.otButton4.pack(side=tk.TOP, fill=X)
 
         self.botLine = tk.Label(self.othWindow, bg="#107eaf", height=5)
@@ -371,7 +383,7 @@ class mainProgramm(tk.Frame):
                 self.tree.column(column_names[i], width=max_width + 20, anchor=CENTER)
 
 
-        if tablename == "prihfile" or tablename == "rashfile" or tablename == "ksu":
+        if tablename == "prihfile" or tablename == "rashfile":
             self.blueLab = tk.Label(self.viewDB_frame, bg="#107eaf", height=35)
             self.blueLab.pack(side=tk.BOTTOM, fill=tk.X)
             self.searchButton = tk.Button(self.viewDB_frame, text="Поиск", bd=0, justify=CENTER, width=12, font=('', 18), command =partial(self.serCH, tablename))
@@ -380,6 +392,20 @@ class mainProgramm(tk.Frame):
             self.closeButton = tk.Button(self.viewDB_frame, text="Закрыть", bd=0, justify=CENTER, width=12, font=('', 18),
                                          command=self.reboot)
             self.closeButton.place(x=300, y=720)
+        elif tablename == "ksu":
+            self.blueLab = tk.Label(self.viewDB_frame, bg="#107eaf", height=35)
+            self.blueLab.pack(side=tk.BOTTOM, fill=tk.X)
+            self.inputButton = tk.Button(self.viewDB_frame, text="Добавить", bd=0, justify=CENTER, width=12,
+                                         font=('', 18),
+                                         command=partial(self.inputTableWindows, column_names, tablename, tablenamerus))
+            self.inputButton.place(x=100, y=720)
+
+            self.searchButton = tk.Button(self.viewDB_frame, text="Поиск", bd=0, justify=CENTER, width=12, font=('', 18), command =partial(self.serCH, tablename))
+            self.searchButton.place(x=300, y=720)
+
+            self.closeButton = tk.Button(self.viewDB_frame, text="Закрыть", bd=0, justify=CENTER, width=12, font=('', 18),
+                                         command=self.reboot)
+            self.closeButton.place(x=500, y=720)
         else:
 
             self.blueLab = tk.Label(self.viewDB_frame, bg="#107eaf", height=35)
@@ -595,11 +621,6 @@ class mainProgramm(tk.Frame):
             self.l7e = ttk.Entry(self.inTable, width=15)
             self.l7e.pack(fill=tk.X)
 
-            self.l8 = tk.Label(self.inTable, text=f"{buflist[7]}", bd=0, justify=CENTER, height=2, font=('', 18))
-            self.l8.pack(side=tk.TOP, fill=tk.X)
-            self.l8e = ttk.Entry(self.inTable, width=15)
-            self.l8e.pack(fill=tk.X)
-
             self.l9 = tk.Label(self.inTable, text=f"{buflist[8]}", bd=0, justify=CENTER, height=2, font=('', 18))
             self.l9.pack(side=tk.TOP, fill=tk.X)
             self.l9e = ttk.Entry(self.inTable, width=15)
@@ -731,54 +752,88 @@ class mainProgramm(tk.Frame):
             buflist = list_pl
             inputTableWin = tk.Toplevel(self)
             inputTableWin.title("Добавление ПЛ")
-            inputTableWin.geometry('400x550')
+            inputTableWin.geometry('400x850')
             inputTableWin.resizable(False, False)
             self.inTable = tk.Frame(inputTableWin)
             self.inTable.place(relwidth=1, relheight=1)
 
-            self.l1 = tk.Label(self.inTable, text=f"Номер путевого листа", bd=0, justify=CENTER, height=3,
+            self.l1 = tk.Label(self.inTable, text=f"Номер путевого листа", bd=0, justify=CENTER, height=2,
                                font=('', 18))
             self.l1.pack(side=tk.TOP, fill=tk.X)
             self.l1e = ttk.Entry(self.inTable, width=15)
             self.l1e.pack(fill=tk.X)
 
-            self.l2 = tk.Label(self.inTable, text=f"Дата составления ПЛ", bd=0, justify=CENTER, height=3, font=('', 18))
+            self.l2 = tk.Label(self.inTable, text=f"Дата составления ПЛ", bd=0, justify=CENTER, height=2, font=('', 18))
             self.l2.pack(side=tk.TOP, fill=tk.X)
             self.l2e = ttk.Entry(self.inTable, width=15)
             self.l2e.pack(fill=tk.X)
 
-            self.l3 = tk.Label(self.inTable, text=f"Номер водительского удостоверения", bd=0, justify=CENTER,
-                               height=3, font=('', 18))
+            self.l22 = tk.Label(self.inTable, text=f"Код ГСМ", bd=0, justify=CENTER, height=2, font=('', 18))
+            self.l22.pack(side=tk.TOP, fill=tk.X)
+            self.l22e = ttk.Entry(self.inTable, width=15)
+            self.l22e.pack(fill=tk.X)
+
+            self.l3 = tk.Label(self.inTable, text=f"Табельный номер водителя", bd=0, justify=CENTER,
+                               height=2, font=('', 18))
             self.l3.pack(side=tk.TOP, fill=tk.X)
             self.l3e = ttk.Entry(self.inTable, width=15)
             self.l3e.pack(fill=tk.X)
 
-            self.l4 = tk.Label(self.inTable, text=f"Табельный номер водителя", bd=0, justify=CENTER, height=3,
+            self.l4 = tk.Label(self.inTable, text=f"Номер водительского удостоверения", bd=0, justify=CENTER, height=2,
                                font=('', 18))
             self.l4.pack(side=tk.TOP, fill=tk.X)
             self.l4e = ttk.Entry(self.inTable, width=15)
             self.l4e.pack(fill=tk.X)
 
             self.l5 = tk.Label(self.inTable, text=f"Государственный номер авто", bd=0, justify=CENTER,
-                               height=3, font=('', 18))
+                               height=2, font=('', 18))
             self.l5.pack(side=tk.TOP, fill=tk.X)
             self.l5e = ttk.Entry(self.inTable, width=15)
             self.l5e.pack(fill=tk.X)
 
+            self.l6 = tk.Label(self.inTable, text=f"Расстояние", bd=0, justify=CENTER,
+                               height=2, font=('', 18))
+            self.l6.pack(side=tk.TOP, fill=tk.X)
+            self.l6e = ttk.Entry(self.inTable, width=15)
+            self.l6e.pack(fill=tk.X)
+
+            self.l7 = tk.Label(self.inTable, text=f"Единица измерения", bd=0, justify=CENTER,
+                               height=2, font=('', 18))
+            self.l7.pack(side=tk.TOP, fill=tk.X)
+            self.l7e = ttk.Entry(self.inTable, width=15)
+            self.l7e.pack(fill=tk.X)
+
+            self.l77 = tk.Label(self.inTable, text=f"Остаток ГСМ", bd=0, justify=CENTER,
+                               height=2, font=('', 18))
+            self.l77.pack(side=tk.TOP, fill=tk.X)
+            self.l77e = ttk.Entry(self.inTable, width=15)
+            self.l77e.pack(fill=tk.X)
+
+            self.l8 = tk.Label(self.inTable, text=f"Объем полученных ГСМ", bd=0, justify=CENTER,
+                               height=2, font=('', 18))
+            self.l8.pack(side=tk.TOP, fill=tk.X)
+            self.l8e = ttk.Entry(self.inTable, width=15)
+            self.l8e.pack(fill=tk.X)
+
+            self.l88 = tk.Label(self.inTable, text=f"Объем потраченных ГСМ", bd=0, justify=CENTER,
+                               height=2, font=('', 18))
+            self.l88.pack(side=tk.TOP, fill=tk.X)
+            self.l88e = ttk.Entry(self.inTable, width=15)
+            self.l88e.pack(fill=tk.X)
 
             self.fram1 = tk.Frame(self.inTable, bg="#107eaf", width=300, height=600)
             self.fram1.pack(side=tk.BOTTOM, fill=tk.X)
             self.inputButton = tk.Button(self.inTable, text="Добавить", fg="black", width=15, font=('', 15), command=partial(self.inputTableSQL, column_names, tablename, tablenamerus))
-            self.inputButton.place(x=15, y=500)
+            self.inputButton.place(x=15, y=800)
             self.closeB = tk.Button(self.inTable, text='Закрыть', fg="black", width=15, font=('', 15),
                                     command=inputTableWin.destroy)
-            self.closeB.place(x=205, y=500)
+            self.closeB.place(x=205, y=800)
 
         if tablename == "ttn":
             buflist = list_ttn
             inputTableWin = tk.Toplevel(self)
             inputTableWin.title("Добавление в ТТН")
-            inputTableWin.geometry('400x800')
+            inputTableWin.geometry('400x600')
             inputTableWin.resizable(False, False)
 
             self.inTable = tk.Frame(inputTableWin)
@@ -814,29 +869,73 @@ class mainProgramm(tk.Frame):
             self.l6e = ttk.Entry(self.inTable, width=15)
             self.l6e.pack(fill=tk.X)
 
-            self.l7 = tk.Label(self.inTable, text=f"{buflist[6]}", bd=0, justify=CENTER, height=1, font=('', 18))
-            self.l7.pack(side=tk.TOP, fill=tk.X)
-            self.l7e = ttk.Entry(self.inTable, width=15)
-            self.l7e.pack(fill=tk.X)
-
-            self.l8 = tk.Label(self.inTable, text=f"{buflist[7]}", bd=0, justify=CENTER, height=1, font=('', 18))
-            self.l8.pack(side=tk.TOP, fill=tk.X)
-            self.l8e = ttk.Entry(self.inTable, width=15)
-            self.l8e.pack(fill=tk.X)
-
-            self.l9 = tk.Label(self.inTable, text=f"{buflist[8]}", bd=0, justify=CENTER, height=1, font=('', 18))
-            self.l9.pack(side=tk.TOP, fill=tk.X)
-            self.l9e = ttk.Entry(self.inTable, width=15)
-            self.l9e.pack(fill=tk.X)
-
 
             self.fram1 = tk.Frame(self.inTable, bg="#107eaf", width=300, height=600)
             self.fram1.pack(side=tk.BOTTOM, fill=tk.X)
             self.inputButton = tk.Button(self.inTable, text="Добавить", fg="black", width=15, font=('', 15),command=partial(self.inputTableSQL, column_names, tablename, tablenamerus))
-            self.inputButton.place(x=15, y=735)
+            self.inputButton.place(x=15, y=535)
             self.closeB = tk.Button(self.inTable, text='Закрыть', fg="black", width=15, font=('', 15),
                                     command=inputTableWin.destroy)
-            self.closeB.place(x=205, y=735)
+            self.closeB.place(x=205, y=535)
+
+        if tablename == "ksu":
+            buflist = list_ksu
+            inputTableWin = tk.Toplevel(self)
+            inputTableWin.title("Добавление в КСУ")
+            inputTableWin.geometry('400x700')
+            inputTableWin.resizable(False, False)
+
+            self.inTable = tk.Frame(inputTableWin)
+            self.inTable.place(relwidth=1, relheight=1)
+
+            self.l1 = tk.Label(self.inTable, text=f"{buflist[0]}", bd=0, justify=CENTER, height=2, font=('', 18))
+            self.l1.pack(side=tk.TOP, fill=tk.X)
+            self.l1e = ttk.Entry(self.inTable, width=15)
+            self.l1e.pack(fill=tk.X)
+
+            self.l2 = tk.Label(self.inTable, text=f"{buflist[1]}", bd=0, justify=CENTER, height=2, font=('', 18))
+            self.l2.pack(side=tk.TOP, fill=tk.X)
+            self.l2e = ttk.Entry(self.inTable, width=15)
+            self.l2e.pack(fill=tk.X)
+
+            self.l3 = tk.Label(self.inTable, text=f"{buflist[2]}", bd=0, justify=CENTER, height=2, font=('', 18))
+            self.l3.pack(side=tk.TOP, fill=tk.X)
+            self.l3e = ttk.Entry(self.inTable, width=15)
+            self.l3e.pack(fill=tk.X)
+
+            self.l4 = tk.Label(self.inTable, text=f"{buflist[3]}", bd=0, justify=CENTER, height=2, font=('', 18))
+            self.l4.pack(side=tk.TOP, fill=tk.X)
+            self.l4e = ttk.Entry(self.inTable, width=15)
+            self.l4e.pack(fill=tk.X)
+
+            self.l5 = tk.Label(self.inTable, text=f"{buflist[4]}", bd=0, justify=CENTER, height=2, font=('', 18))
+            self.l5.pack(side=tk.TOP, fill=tk.X)
+            self.l5e = ttk.Entry(self.inTable, width=15)
+            self.l5e.pack(fill=tk.X)
+
+            self.l6 = tk.Label(self.inTable, text=f"{buflist[5]}", bd=0, justify=CENTER, height=2, font=('', 18))
+            self.l6.pack(side=tk.TOP, fill=tk.X)
+            self.l6e = ttk.Entry(self.inTable, width=15)
+            self.l6e.pack(fill=tk.X)
+
+            self.l7 = tk.Label(self.inTable, text=f"{buflist[6]}", bd=0, justify=CENTER, height=2, font=('', 18))
+            self.l7.pack(side=tk.TOP, fill=tk.X)
+            self.l7e = ttk.Entry(self.inTable, width=15)
+            self.l7e.pack(fill=tk.X)
+
+            self.l8 = tk.Label(self.inTable, text=f"{buflist[7]}", bd=0, justify=CENTER, height=2, font=('', 18))
+            self.l8.pack(side=tk.TOP, fill=tk.X)
+            self.l8e = ttk.Entry(self.inTable, width=15)
+            self.l8e.pack(fill=tk.X)
+
+            self.fram1 = tk.Frame(self.inTable, bg="#107eaf", width=300, height=600)
+            self.fram1.pack(side=tk.BOTTOM, fill=tk.X)
+            self.inputButton = tk.Button(self.inTable, text="Добавить", fg="black", width=15, font=('', 15),
+                                         command=partial(self.inputTableSQL, column_names, tablename, tablenamerus))
+            self.inputButton.place(x=15, y=635)
+            self.closeB = tk.Button(self.inTable, text='Закрыть', fg="black", width=15, font=('', 15),
+                                    command=inputTableWin.destroy)
+            self.closeB.place(x=205, y=635)
     def inputTableSQL(self, column_names, tablename, tablenamerus):
         if tablename == "typegsm":
             value1 = self.l1e.get()
@@ -933,50 +1032,45 @@ class mainProgramm(tk.Frame):
                 self.errorWindows()
 
         if tablename == "ttn":
-            check = False
             value1 = self.l1e.get()
             value2 = self.l2e.get()
             value3 = self.l3e.get()
             value4 = self.l4e.get()
             value5 = self.l5e.get()
             value6 = float(self.l6e.get())
-            value7 = float(self.l7e.get())
-            value8 = float(self.l8e.get())
-            value9 = float(self.l9e.get())
-            value10 = (value6 * value9) / 100.0
-            value11 = value10 + value6
             try:
                 with conn.cursor() as cursor:
                     cursor.execute(f"""INSERT INTO "{tablename}"(
-            	                            "ttn_number", "date_zakl_ttn", "code_gsm", "code_post", "untill", "price", "amount", "stoim", "rate_nds", "price_nds", "price_of_nds") VALUES 
-            	                            ('{value1}','{value2}', '{value3}', '{value4}', '{value5}', {value6}, {value7}, {value8}, {value9}, {value10}, {value11} )""")
-                    check = True
-                    if check:
-                        self.refresh(column_names, tablename, tablenamerus)
+            	                            "ttn_number", "date_zakl_ttn", "code_gsm", "code_post", "untill",  "amount") VALUES 
+            	                            ('{value1}','{value2}', '{value3}', '{value4}', '{value5}', {value6} )""")
+                    self.refresh(column_names, tablename, tablenamerus)
+
             except Exception as _ex:
                 self.errorWindows()
 
         if tablename == "pl":
-            check = False
             value1 = self.l1e.get()
             value2 = self.l2e.get()
             value3 = self.l3e.get()
             value4 = self.l4e.get()
             value5 = self.l5e.get()
+            value6 = float(self.l6e.get())
+            value7 = self.l7e.get()
+            value8 = float(self.l8e.get())
+            value9 = self.l22e.get()
+            value10=float(self.l77e.get())
+            value11 =float(self.l88e.get())
             try:
                 with conn.cursor() as cursor:
                     cursor.execute(f"""INSERT INTO "{tablename}"(
-                        	                            "pl_number", "date_pl", "tab_number","num_drivlicens","national_avto_num") VALUES 
-                        	                            ('{value1}','{value2}', '{value3}', '{value4}', '{value5}') """)
-                    check = True
-                    if check:
-                        self.refresh(column_names, tablename, tablenamerus)
+                        	                            "pl_number", "date_pl","code_gsm","tab_number","num_drivlicens","national_avto_num","probeg","unit","ostatok","amount","potr") VALUES 
+                        	                            ('{value1}','{value2}', '{value9}','{value3}', '{value4}', '{value5}',{value6},'{value7}',{value10},{value8}, {value11}) """)
+                    self.refresh(column_names, tablename, tablenamerus)
 
             except Exception as _ex:
                 self.errorWindows()
 
         if tablename == "comptechnmeans":
-            check = False
             value1 = self.l1e.get()
             value2 = self.l2e.get()
             value3 = self.l3e.get()
@@ -984,16 +1078,36 @@ class mainProgramm(tk.Frame):
             value5 = float(self.l5e.get())
             value6 = float(self.l6e.get())
             value7 = float(self.l7e.get())
-            value8 = float(self.l8e.get())
+            if value5 > 3.5 and value5 < 12:
+                value8 = "310.29.10.41.112"
+            else:
+                value8 = "310.29.10.41.113"
             value9 = float(self.l9e.get())
             try:
                 with conn.cursor() as cursor:
                     cursor.execute(f"""INSERT INTO "{tablename}"(
                         	                            "national_avto_num", "auto_mark", "body_number","untill","load_capacity","year_of_product","first_cost","kod_porc","last_cost") VALUES 
-                        	                            ('{value1}','{value2}', '{value3}', '{value4}', {value5}, {value6}, {value7}, {value8}, {value9}) """)
-                    check = True
-                    if check:
-                        self.refresh(column_names, tablename, tablenamerus)
+                        	                            ('{value1}','{value2}', '{value3}', '{value4}', {value5}, {value6}, {value7}, '{value8}', {value9}) """)
+                    self.refresh(column_names, tablename, tablenamerus)
+
+            except Exception as _ex:
+                self.errorWindows()
+
+        if tablename == "ksu":
+            value1 = self.l1e.get()
+            value2 = self.l2e.get()
+            value3 = self.l3e.get()
+            value4 = self.l4e.get()
+            value5 = self.l5e.get()
+            value6 = self.l6e.get()
+            value7 = self.l7e.get()
+            value8 = float(self.l8e.get())
+            try:
+                with conn.cursor() as cursor:
+                    cursor.execute(f"""INSERT INTO "{tablename}"(
+                                   	                            "ksu_doc", "date_ksu", "sklad_number","tanker_number","code_gsm","code_post","unit","ed_price","start_bal","amount_prih_gsm","amount_rash_gsm","end_bal") VALUES 
+                                   	                            ('{value1}','{value2}', '{value3}', '{value4}', '{value5}', '{value6}', '{value7}', {value8}, 0,0,0,0) """)
+                    self.refresh(column_names, tablename, tablenamerus)
 
             except Exception as _ex:
                 self.errorWindows()
@@ -1300,7 +1414,7 @@ class mainProgramm(tk.Frame):
 
                 self.serTable = tk.Toplevel(self)
                 self.serTable.title(f"Изменение в {tablename}")
-                self.serTable.geometry('410x800')
+                self.serTable.geometry('410x700')
                 self.serTable.resizable(False, False)
 
                 self.sTable = tk.Frame(self.serTable)
@@ -1348,17 +1462,6 @@ class mainProgramm(tk.Frame):
                 self.l7e.insert(0, upValue[0][6])
                 self.l7e.pack(fill=tk.X)
 
-                self.l8 = tk.Label(self.sTable, text=f"{buflist[7]}", bd=0, justify=CENTER, height=2, font=('', 18))
-                self.l8.pack(side=tk.TOP, fill=tk.X)
-                self.l8e = ttk.Entry(self.sTable, width=15)
-                self.l8e.insert(0, upValue[0][7])
-                self.l8e.pack(fill=tk.X)
-
-                self.l9 = tk.Label(self.sTable, text=f"{buflist[8]}", bd=0, justify=CENTER, height=2, font=('', 18))
-                self.l9.pack(side=tk.TOP, fill=tk.X)
-                self.l9e = ttk.Entry(self.sTable, width=15)
-                self.l9e.insert(0, upValue[0][8])
-                self.l9e.pack(fill=tk.X)
 
                 self.fram1 = tk.Frame(self.sTable, bg="#107eaf", width=300, height=600)
                 self.fram1.pack(side=tk.BOTTOM, fill=tk.X)
@@ -1366,11 +1469,11 @@ class mainProgramm(tk.Frame):
                 self.inputButton = tk.Button(self.sTable, text="Изменить", fg="black", width=18, font=('', 15),
                                              command=partial(self.upDateSQL, tablename, upValue, column_names,
                                                              tablenamerus))
-                self.inputButton.place(x=100, y=700)
+                self.inputButton.place(x=100, y=600)
 
                 self.closeB = tk.Button(self.sTable, text='Закрыть', fg="black", width=18, font=('', 15),
                                         command=self.serTable.destroy)
-                self.closeB.place(x=100, y=750)
+                self.closeB.place(x=100, y=650)
 
         if tablename == "deliverycontract":
             selection = self.tree.selection()
@@ -1535,7 +1638,7 @@ class mainProgramm(tk.Frame):
                 buflist = list_pl
                 self.serTable = tk.Toplevel(self)
                 self.serTable.title(f"Изменение в {tablename}")
-                self.serTable.geometry('410x500')
+                self.serTable.geometry('410x850')
                 self.serTable.resizable(False, False)
 
                 self.sTable = tk.Frame(self.serTable)
@@ -1553,23 +1656,59 @@ class mainProgramm(tk.Frame):
                 self.l2e.insert(0, upValue[0][1])
                 self.l2e.pack(fill=tk.X)
 
-                self.l3 = tk.Label(self.sTable, text=f"{buflist[2]}", bd=0, justify=CENTER, height=2, font=('', 18))
+                self.l22 = tk.Label(self.sTable, text=f"{buflist[2]}", bd=0, justify=CENTER, height=2, font=('', 18))
+                self.l22.pack(side=tk.TOP, fill=tk.X)
+                self.l22e = ttk.Entry(self.sTable, width=15)
+                self.l22e.insert(0, upValue[0][2])
+                self.l22e.pack(fill=tk.X)
+
+                self.l3 = tk.Label(self.sTable, text=f"{buflist[3]}", bd=0, justify=CENTER, height=2, font=('', 18))
                 self.l3.pack(side=tk.TOP, fill=tk.X)
                 self.l3e = ttk.Entry(self.sTable, width=15)
-                self.l3e.insert(0, upValue[0][2])
+                self.l3e.insert(0, upValue[0][3])
                 self.l3e.pack(fill=tk.X)
 
-                self.l4 = tk.Label(self.sTable, text=f"{buflist[3]}", bd=0, justify=CENTER, height=2, font=('', 18))
+                self.l4 = tk.Label(self.sTable, text=f"{buflist[4]}", bd=0, justify=CENTER, height=2, font=('', 18))
                 self.l4.pack(side=tk.TOP, fill=tk.X)
                 self.l4e = ttk.Entry(self.sTable, width=15)
-                self.l4e.insert(0, upValue[0][3])
+                self.l4e.insert(0, upValue[0][4])
                 self.l4e.pack(fill=tk.X)
 
-                self.l5 = tk.Label(self.sTable, text=f"{buflist[4]}", bd=0, justify=CENTER, height=2, font=('', 18))
+                self.l5 = tk.Label(self.sTable, text=f"{buflist[5]}", bd=0, justify=CENTER, height=2, font=('', 18))
                 self.l5.pack(side=tk.TOP, fill=tk.X)
                 self.l5e = ttk.Entry(self.sTable, width=15)
-                self.l5e.insert(0, upValue[0][4])
+                self.l5e.insert(0, upValue[0][5])
                 self.l5e.pack(fill=tk.X)
+
+                self.l6 = tk.Label(self.sTable, text=f"{buflist[6]}", bd=0, justify=CENTER, height=2, font=('', 18))
+                self.l6.pack(side=tk.TOP, fill=tk.X)
+                self.l6e = ttk.Entry(self.sTable, width=15)
+                self.l6e.insert(0, upValue[0][6])
+                self.l6e.pack(fill=tk.X)
+
+                self.l7 = tk.Label(self.sTable, text=f"{buflist[7]}", bd=0, justify=CENTER, height=2, font=('', 18))
+                self.l7.pack(side=tk.TOP, fill=tk.X)
+                self.l7e = ttk.Entry(self.sTable, width=15)
+                self.l7e.insert(0, upValue[0][7])
+                self.l7e.pack(fill=tk.X)
+
+                self.l8 = tk.Label(self.sTable, text=f"{buflist[8]}", bd=0, justify=CENTER, height=2, font=('', 18))
+                self.l8.pack(side=tk.TOP, fill=tk.X)
+                self.l8e = ttk.Entry(self.sTable, width=15)
+                self.l8e.insert(0, upValue[0][8])
+                self.l8e.pack(fill=tk.X)
+
+                self.l9 = tk.Label(self.sTable, text=f"{buflist[9]}", bd=0, justify=CENTER, height=2, font=('', 18))
+                self.l9.pack(side=tk.TOP, fill=tk.X)
+                self.l9e = ttk.Entry(self.sTable, width=15)
+                self.l9e.insert(0, upValue[0][9])
+                self.l9e.pack(fill=tk.X)
+
+                self.l10 = tk.Label(self.sTable, text=f"{buflist[10]}", bd=0, justify=CENTER, height=2, font=('', 18))
+                self.l10.pack(side=tk.TOP, fill=tk.X)
+                self.l10e = ttk.Entry(self.sTable, width=15)
+                self.l10e.insert(0, upValue[0][10])
+                self.l10e.pack(fill=tk.X)
 
                 self.fram1 = tk.Frame(self.sTable, bg="#107eaf", width=300, height=600)
                 self.fram1.pack(side=tk.BOTTOM, fill=tk.X)
@@ -1577,12 +1716,78 @@ class mainProgramm(tk.Frame):
                 self.inputButton = tk.Button(self.sTable, text="Изменить", fg="black", width=18, font=('', 15),
                                              command=partial(self.upDateSQL, tablename, upValue, column_names,
                                                              tablenamerus))
-                self.inputButton.place(x=100, y=400)
+                self.inputButton.place(x=15, y=800)
 
                 self.closeB = tk.Button(self.sTable, text='Закрыть', fg="black", width=18, font=('', 15),
                                         command=self.serTable.destroy)
-                self.closeB.place(x=100, y=450)
+                self.closeB.place(x=205, y=800)
 
+        if tablename == "ttn":
+            selection = self.tree.selection()
+            upValue = []
+            for item in selection:
+                item_id1 = self.tree.item(item, "values")
+                upValue.append(item_id1)
+            if len(upValue) == 0:
+                pass
+            else:
+                buflist = list_ttn
+
+                self.serTable = tk.Toplevel(self)
+                self.serTable.title(f"Изменение в {tablename}")
+                self.serTable.geometry('300x600')
+                self.serTable.resizable(False, False)
+
+                self.sTable = tk.Frame(self.serTable)
+                self.sTable.place(relheight=1, relwidth=1)
+
+                self.l1 = tk.Label(self.sTable, text=f"{buflist[0]}", bd=0, justify=CENTER, height=3, font=('', 18))
+                self.l1.pack(side=tk.TOP, fill=tk.X)
+                self.l1e = ttk.Entry(self.sTable, width=15)
+                self.l1e.insert(0, upValue[0][0])
+                self.l1e.pack(fill=tk.X)
+
+                self.l2 = tk.Label(self.sTable, text=f"{buflist[1]}", bd=0, justify=CENTER, height=3, font=('', 18))
+                self.l2.pack(side=tk.TOP, fill=tk.X)
+                self.l2e = ttk.Entry(self.sTable, width=15)
+                self.l2e.insert(0, upValue[0][1])
+                self.l2e.pack(fill=tk.X)
+
+                self.l3 = tk.Label(self.sTable, text=f"{buflist[2]}", bd=0, justify=CENTER, height=3, font=('', 18))
+                self.l3.pack(side=tk.TOP, fill=tk.X)
+                self.l3e = ttk.Entry(self.sTable, width=15)
+                self.l3e.insert(0, upValue[0][2])
+                self.l3e.pack(fill=tk.X)
+
+                self.l4 = tk.Label(self.sTable, text=f"{buflist[3]}", bd=0, justify=CENTER, height=3, font=('', 18))
+                self.l4.pack(side=tk.TOP, fill=tk.X)
+                self.l4e = ttk.Entry(self.sTable, width=15)
+                self.l4e.insert(0, upValue[0][3])
+                self.l4e.pack(fill=tk.X)
+
+                self.l5 = tk.Label(self.sTable, text=f"{buflist[4]}", bd=0, justify=CENTER, height=3, font=('', 18))
+                self.l5.pack(side=tk.TOP, fill=tk.X)
+                self.l5e = ttk.Entry(self.sTable, width=15)
+                self.l5e.insert(0, upValue[0][4])
+                self.l5e.pack(fill=tk.X)
+
+                self.l6 = tk.Label(self.sTable, text=f"{buflist[5]}", bd=0, justify=CENTER, height=3, font=('', 18))
+                self.l6.pack(side=tk.TOP, fill=tk.X)
+                self.l6e = ttk.Entry(self.sTable, width=15)
+                self.l6e.insert(0, upValue[0][5])
+                self.l6e.pack(fill=tk.X)
+
+                self.fram1 = tk.Frame(self.sTable, bg="#107eaf", width=300, height=600)
+                self.fram1.pack(side=tk.BOTTOM, fill=tk.X)
+
+                self.inputButton = tk.Button(self.sTable, text="Изменить", fg="black", width=18, font=('', 15),
+                                             command=partial(self.upDateSQL, tablename, upValue, column_names,
+                                                             tablenamerus))
+                self.inputButton.place(x=40, y=500)
+
+                self.closeB = tk.Button(self.sTable, text='Закрыть', fg="black", width=18, font=('', 15),
+                                        command=self.serTable.destroy)
+                self.closeB.place(x=40, y=550)
     def upDateSQL(self, tablename, upValue,column_names, tablenamerus):
         if tablename == "typegsm":
             value1 = self.l1e.get()
@@ -1639,15 +1844,13 @@ class mainProgramm(tk.Frame):
             value5 = float(self.l5e.get())
             value6 = float(self.l6e.get())
             value7 = float(self.l7e.get())
-            value8 = float(self.l8e.get())
-            value9 = float(self.l9e.get())
 
             try:
                 with conn.cursor() as cursor:
                     cursor.execute(f"""UPDATE {tablename} SET national_avto_num='{value1}', auto_mark='{value2}', body_number='{value3}', untill='{value4}', load_capacity={value5},
-                                    year_of_product={value6}, first_cost={value7}, kod_porc={value8}, last_cost={value9}
+                                    year_of_product={value6}, first_cost={value7}
                                    WHERE national_avto_num='{upValue[0][0]}' AND auto_mark='{upValue[0][1]}' AND body_number='{upValue[0][2]}' AND untill='{upValue[0][3]}' AND load_capacity={upValue[0][4]} 
-                                   AND year_of_product={upValue[0][5]} AND first_cost={upValue[0][6]} AND kod_porc={upValue[0][7]} AND last_cost={upValue[0][8]} """)
+                                   AND year_of_product={upValue[0][5]} AND first_cost={upValue[0][6]} """)
                     self.refresh(column_names, tablename, tablenamerus)
 
             except Exception as _ex:
@@ -1699,35 +1902,69 @@ class mainProgramm(tk.Frame):
             value3 = self.l3e.get()
             value4 = self.l4e.get()
             value5 = self.l5e.get()
+            value6 = float(self.l6e.get())
+            value7 = self.l7e.get()
+            value8 = float(self.l8e.get())
+            value10 = self.l22e.get()
+            value11 = float(self.l9e.get())
+            value12 = float(self.l10e.get())
             try:
                 with conn.cursor() as cursor:
                     cursor.execute(
-                        f"""UPDATE {tablename} SET pl_number='{value1}', date_pl='{value2}', tab_number='{value3}', num_drivlicens='{value4}', national_avto_num='{value5}'
-                                               WHERE pl_number='{upValue[0][0]}' AND date_pl='{upValue[0][1]}' AND tab_number='{upValue[0][2]}' AND num_drivlicens='{upValue[0][3]}'  AND national_avto_num='{upValue[0][4]}' """)
+                        f"""UPDATE {tablename} SET pl_number='{value1}', date_pl='{value2}',code_gsm='{value10}', tab_number='{value3}', num_drivlicens='{value4}', national_avto_num='{value5}',probeg={value6},unit='{value7}', ostatok = {value8}, amount = {value11}, potr = {value12}
+                                               WHERE pl_number='{upValue[0][0]}' AND date_pl='{upValue[0][1]}' AND code_gsm='{upValue[0][2]}' AND tab_number='{upValue[0][3]}' AND num_drivlicens='{upValue[0][4]}'  AND national_avto_num='{upValue[0][5]}' AND probeg={upValue[0][6]} AND unit='{upValue[0][7]}' AND ostatok={upValue[0][8]} AND amount={upValue[0][9]} AND potr = {upValue[0][10]} """)
                     self.refresh(column_names, tablename, tablenamerus)
 
             except Exception as _ex:
                 pass
 
+        if tablename == "ttn":
+            value1 = self.l1e.get()
+            value2 = self.l2e.get()
+            value3 = self.l3e.get()
+            value4 = self.l4e.get()
+            value5 = self.l5e.get()
+            value6 = float(self.l6e.get())
+            try:
+                with conn.cursor() as cursor:
+                    cursor.execute(
+                        f"""UPDATE {tablename} SET ttn_number='{value1}', date_zakl_ttn='{value2}', code_gsm='{value3}', code_post='{value4}', untill='{value5}',amount={value6}
+                                                          WHERE ttn_number='{upValue[0][0]}' AND date_zakl_ttn='{upValue[0][1]}' AND code_gsm='{upValue[0][2]}' AND code_post='{upValue[0][3]}'  AND untill='{upValue[0][4]}' AND amount={upValue[0][5]} """)
+                    self.refresh(column_names, tablename, tablenamerus)
+
+            except Exception as _ex:
+                pass
+
+    def show_password(self):
+        self.inputPassword.config(show="")
+    def hide_password(self):
+        self.inputPassword.config(show="*")
     def arhbutton(self):
         win.title('Авторизация')
-        win.geometry('300x150')
+        win.geometry('400x150')
         win.resizable(False, False)
 
         self.frame = tk.Frame(win)
         self.frame.place(relwidth=1, relheight=1)
 
         self.lab_Login = tk.Label(self.frame, text="Логин", font=10)
-        self.lab_Login.place(x=40, y=35)
+        self.lab_Login.place(x=40, y=15)
 
         self.lab_Password = tk.Label(self.frame, text="Пароль", font=15)
-        self.lab_Password.place(x=40, y=80)
+        self.lab_Password.place(x=40, y=45)
 
         self.inputLogin = ttk.Entry(self.frame, width=15)
-        self.inputLogin.place(x=130, y=33)
+        self.inputLogin.place(x=130, y=15)
 
         self.inputPassword = ttk.Entry(self.frame, width=15, show="*")
-        self.inputPassword.place(x=130, y=78)
+        self.inputPassword.place(x=130, y=45)
+
+        self.show_button = tk.Button(self.frame, text="Показать пароль", command=self.show_password)
+        self.show_button.place(x=40, y=78)
+
+        self.hide_button = tk.Button(self.frame, text="Скрыть пароль", fg="black", width=14, font=('', 12),
+                                     command=self.hide_password)
+        self.hide_button.place(x=220, y=78)
 
         self.connButton = tk.Button(self.frame, text="Войти", fg="black", width=10, font=('', 12),
                                     command=self.checkarhbd)
@@ -1926,6 +2163,392 @@ class mainProgramm(tk.Frame):
                             self.refresh(column_names, tablename, tablenamerus)
                 except Exception as _ex:
                     print("ERORR")
+
+    def otch1(self):
+        win = tk.Toplevel(self)
+        win.title('Введите код ГСМ')
+        win.geometry('300x150')
+        win.resizable(False, False)
+
+        self.frame = tk.Frame(win)
+        self.frame.place(relwidth=1, relheight=1)
+
+        self.lab_Login = tk.Label(self.frame, text="Код ГСМ", font=10)
+        self.lab_Login.place(x=15, y=15)
+
+        self.l1 = ttk.Entry(self.frame, width=13)
+        self.l1.place(x=150, y=15)
+
+        self.connButton = tk.Button(self.frame, text="Сформировать", fg="black", width=10, font=('', 12),
+                                    command=self.otch1SQL)
+        self.connButton.pack(side=tk.BOTTOM, pady=10)
+    def otch1SQL(self):
+        cdgsm = self.l1.get()
+        self.otch1SQL = tk.Toplevel(self)
+        self.otch1SQL.title(f"Отчет по заключенным договорам")
+        screen_width = self.otch1SQL.winfo_screenwidth()
+        self.otch1SQL.geometry(f'{screen_width}x800')
+        self.otch1SQL.rowconfigure(index=0, weight=1)
+        self.otch1SQL.columnconfigure(index=0, weight=1)
+        self.otch1SQL.resizable(False, False)
+
+        self.viewDB_otch1SQL = tk.Frame(self.otch1SQL)
+        self.viewDB_otch1SQL.place(relwidth=1, relheight=1)
+
+        try:
+            with conn.cursor() as cursor:
+                cursor.execute(f"""SELECT COUNT(*) AS contract_count
+                                    FROM deliverycontract
+                                    WHERE deliverycontract.code_gsm = '{cdgsm}';""")
+                result = cursor.fetchone()[0]
+        except Exception as _ex:
+            pass
+
+        self.txet = tk.Text(self.viewDB_otch1SQL, width=20, height=3, wrap=WORD)
+        self.txet.insert(1.0, f"Общее количество договоров (шт): {result}")
+        self.txet.tag_add('title', 1.0, '1.end')
+
+        self.txet.tag_config('title', justify=CENTER,
+                             font=("", 18, ''))
+        self.txet.pack(side=tk.TOP, fill=tk.X)
+
+        data = []
+        try:
+            with conn.cursor() as cursor:
+                cursor.execute(f"""SELECT contract_number, date_contract, name_proizv, typegsm.code_gsm, name_gsm, deliverycontract.untill, deliverycontract.amount, deliverycontract.stoim
+                        FROM deliverycontract, typegsm, vendorgsm
+						WHERE deliverycontract.code_gsm = '{cdgsm}' AND typegsm.code_gsm = '{cdgsm}' AND vendorgsm.code_gsm = '{cdgsm}';""")
+                data = [row for row in cursor.fetchall()]
+        except Exception as _ex:
+            pass
+
+        colmnsname1 = ['Список договоров','Список ГСМ']
+        self.tree1 = ttk.Treeview(self.viewDB_otch1SQL,height=0, columns=colmnsname1, show="headings")
+        self.tree1.pack(fill=X)
+
+        self.tree1.heading(f"{colmnsname1[0]}", text=f"{colmnsname1[0]}")
+        self.tree1.column(f"{colmnsname1[0]}", stretch=False,width=575)
+        self.tree1.heading(f"{colmnsname1[1]}", text=f"{colmnsname1[1]}")
+        self.tree1.column(f"{colmnsname1[1]}", stretch=False, width=screen_width-575)
+
+        colmnsname2 = ['Номер договора','Дата заключения договора','Наименование поставщика','Код ГСМ','Наименование ГСМ','Единица измерения','Объем поставки','Стоимость договора']
+        self.tree2 = ttk.Treeview(self.viewDB_otch1SQL, columns=colmnsname2,height=35, show="headings")
+        self.tree2.pack(fill=X)
+
+        for i in colmnsname2:
+            self.tree2.heading(f"{i}", text=f"{i}")
+            if i == 'Номер договора':
+                self.tree2.column(f"{i}", stretch=False)
+                self.tree2.column(f"{i}", width=100)
+            if i == 'Дата заключения договора' or i == 'Наименование поставщика':
+                self.tree2.column(f"{i}", stretch=False)
+                self.tree2.column(f"{i}", width=200)
+            else:
+                self.tree2.column(f"{i}", width=130, stretch=True)
+
+        for row in data:
+            self.tree2.insert('', tk.END, values=tuple(row))
+
+        self.blueLab = tk.Label(self.viewDB_otch1SQL, bg="#107eaf", height=35)
+        self.blueLab.pack(side=tk.BOTTOM, fill=tk.X)
+        self.closeButton = tk.Button(self.viewDB_otch1SQL, text="Закрыть", bd=0, justify=CENTER, width=12, font=('', 18),
+                                     command=self.reboot)
+        self.closeButton.place(x=650, y=750)
+
+    def otch2(self):
+        win = tk.Toplevel(self)
+        win.title('Введите период')
+        win.geometry('300x150')
+        win.resizable(False, False)
+
+        self.frame = tk.Frame(win)
+        self.frame.place(relwidth=1, relheight=1)
+
+        self.lab_Login = tk.Label(self.frame, text="Начало периода", font=10)
+        self.lab_Login.place(x=15, y=15)
+
+        self.lab_Password = tk.Label(self.frame, text="Конец периода", font=15)
+        self.lab_Password.place(x=15, y=45)
+
+        self.inputmes1= ttk.Entry(self.frame, width=10)
+        self.inputmes1.place(x=150, y=15)
+
+        self.inputmes2 = ttk.Entry(self.frame, width=10)
+        self.inputmes2.place(x=150, y=45)
+
+        self.connButton = tk.Button(self.frame, text="Сформировать", fg="black", width=10, font=('', 12),
+                                    command=self.otch2SQL)
+        self.connButton.pack(side=tk.BOTTOM, pady=10)
+    def otch2SQL(self):
+        mes1 = int(self.inputmes1.get())
+        mes2 = int(self.inputmes2.get())
+
+        self.otch2SQL = tk.Toplevel(self)
+        self.otch2SQL.title(f"Отчет о движении ГСМ на складе")
+        screen_width = self.otch2SQL.winfo_screenwidth()
+        self.otch2SQL.geometry(f'{screen_width}x800')
+        self.otch2SQL.rowconfigure(index=0, weight=1)
+        self.otch2SQL.columnconfigure(index=0, weight=1)
+        self.otch2SQL.resizable(False, False)
+
+        self.viewDB_otch2SQL = tk.Frame(self.otch2SQL)
+        self.viewDB_otch2SQL.place(relwidth=1, relheight=1)
+
+        self.txet = tk.Text(self.viewDB_otch2SQL, width=20, height=3, wrap=WORD)
+        self.txet.insert(1.0, f"Оборотная ведомость за период {mes1} по {mes2}")
+        self.txet.tag_add('title', 1.0, '1.end')
+
+        self.txet.tag_config('title', justify=CENTER,
+                        font=("", 18, ''))
+        self.txet.pack(side=tk.TOP, fill=tk.X)
+
+
+        data = []
+        try:
+            with conn.cursor() as cursor:
+                cursor.execute(f"""	SELECT
+                                        typegsm.code_gsm,
+                                        typegsm.name_gsm,
+                                        typegsm.unit,
+                                        ksu.start_bal,
+                                        (
+                                            SELECT SUM(amount)
+                                            FROM prihfile
+                                            WHERE ksu.code_gsm = prihfile.code_gsm
+                                        ) AS prih_gsm,
+                                        (
+                                            SELECT SUM(amount)
+                                            FROM rashfile
+                                            WHERE ksu.code_gsm = rashfile.code_gsm
+                                        ) AS rash_gsm,
+                                        ksu.end_bal
+                                    FROM
+                                        typegsm, ksu, prihfile, rashfile
+                                    WHERE typegsm.code_gsm = ksu.code_gsm 
+                                      AND ksu.code_gsm = prihfile.code_gsm 
+                                      AND ksu.code_gsm = rashfile.code_gsm 
+                                      AND substring(prihfile.date_zakl_ttn, 4, 2)::integer >= {mes1} 
+                                      AND substring(rashfile.date_pl, 4, 2)::integer >= {mes1}
+                                      AND substring(prihfile.date_zakl_ttn, 4, 2)::integer <= {mes2} 
+                                      AND substring(rashfile.date_pl, 4, 2)::integer <= {mes2};
+
+                                """)
+                data = [row for row in cursor.fetchall()]
+        except Exception as _ex:
+            pass
+
+        colmnsname1 = ['Код ГСМ','Наименование ГСМ','Единица измерения','Остаток на начало периода','Количество прихода','Количество расхода','Остаток на конец периода']
+        self.tree1 = ttk.Treeview(self.viewDB_otch2SQL, height=37, columns=colmnsname1, show="headings")
+        self.tree1.pack(fill=X)
+
+        self.tree1.heading(f"{colmnsname1[0]}", text=f"{colmnsname1[0]}")
+        self.tree1.column(f"{colmnsname1[0]}", stretch=False, width=210)
+
+        self.tree1.heading(f"{colmnsname1[1]}", text=f"{colmnsname1[1]}")
+        self.tree1.column(f"{colmnsname1[1]}", stretch=False, width=250)
+
+        self.tree1.heading(f"{colmnsname1[2]}", text=f"{colmnsname1[2]}")
+        self.tree1.column(f"{colmnsname1[2]}", stretch=False, width=180)
+
+        self.tree1.heading(f"{colmnsname1[3]}", text=f"{colmnsname1[3]}")
+        self.tree1.column(f"{colmnsname1[3]}", stretch=False, width=200)
+
+        self.tree1.heading(f"{colmnsname1[4]}", text=f"{colmnsname1[4]}")
+        self.tree1.column(f"{colmnsname1[4]}", stretch=False, width=200)
+
+        self.tree1.heading(f"{colmnsname1[5]}", text=f"{colmnsname1[5]}")
+        self.tree1.column(f"{colmnsname1[5]}", stretch=False, width=200)
+
+        self.tree1.heading(f"{colmnsname1[6]}", text=f"{colmnsname1[6]}")
+        self.tree1.column(f"{colmnsname1[6]}", stretch=False, width=200)
+
+        for row in data:
+            self.tree1.insert('', tk.END, values=tuple(row))
+
+        self.blueLab = tk.Label(self.viewDB_otch2SQL, bg="#107eaf", height=35)
+        self.blueLab.pack(side=tk.BOTTOM, fill=tk.X)
+        self.closeButton = tk.Button(self.viewDB_otch2SQL, text="Закрыть", bd=0, justify=CENTER, width=12,
+                                     font=('', 18),
+                                     command=self.reboot)
+        self.closeButton.place(x=650, y=750)
+
+    def otch3SQL(self):
+        self.otch3SQL = tk.Toplevel(self)
+        self.otch3SQL.title(f"Отчет по водителям")
+        screen_width = self.otch3SQL.winfo_screenwidth()
+        self.otch3SQL.geometry(f'{screen_width}x800')
+        self.otch3SQL.rowconfigure(index=0, weight=1)
+        self.otch3SQL.columnconfigure(index=0, weight=1)
+        self.otch3SQL.resizable(False, False)
+
+        self.viewDB_otch3SQLL = tk.Frame(self.otch3SQL)
+        self.viewDB_otch3SQLL.place(relwidth=1, relheight=1)
+
+        try:
+            with conn.cursor() as cursor:
+                cursor.execute(f"""SELECT COUNT(*) AS contract_count
+                                    FROM companydrivers
+                            """)
+                result = cursor.fetchone()[0]
+        except Exception as _ex:
+            pass
+
+        self.txet = tk.Text(self.viewDB_otch3SQLL, width=20, height=3, wrap=WORD)
+        self.txet.insert(1.0, f"Общее количество водителей: {result}")
+        self.txet.tag_add('title', 1.0, '1.end')
+
+        self.txet.tag_config('title', justify=CENTER,
+                             font=("", 18, ''))
+        self.txet.pack(side=tk.TOP, fill=tk.X)
+
+        data = []
+        try:
+            with conn.cursor() as cursor:
+                cursor.execute(f"""
+                                    SELECT
+                                        cd.tab_number,
+                                        cd.drivers_name,
+                                        COUNT(pl.pl_number) AS koll_vyd_pl,
+                                        COALESCE(SUM(pl.probeg), 0) AS kol_pr_km
+                                    FROM
+                                        CompanyDrivers cd
+                                    LEFT JOIN
+                                        PL pl ON pl.tab_number = cd.tab_number
+                                    GROUP BY
+                                        cd.tab_number,
+                                        cd.drivers_name;
+
+        						""")
+                data = [row for row in cursor.fetchall()]
+        except Exception as _ex:
+            pass
+
+        colmnsname1 = ['Табельный номер','ФИО водителя','Количество выданых путевых листов','Количество приехавших км']
+        self.tree1 = ttk.Treeview(self.viewDB_otch3SQLL, height=37, columns=colmnsname1, show="headings")
+        self.tree1.pack(fill=X)
+
+        self.tree1.heading(f"{colmnsname1[0]}", text=f"{colmnsname1[0]}")
+        self.tree1.column(f"{colmnsname1[0]}", stretch=False, width=300)
+
+        self.tree1.heading(f"{colmnsname1[1]}", text=f"{colmnsname1[1]}")
+        self.tree1.column(f"{colmnsname1[1]}", stretch=False, width=450)
+
+        self.tree1.heading(f"{colmnsname1[2]}", text=f"{colmnsname1[2]}")
+        self.tree1.column(f"{colmnsname1[2]}", stretch=False, width=400)
+
+        self.tree1.heading(f"{colmnsname1[3]}", text=f"{colmnsname1[3]}")
+        self.tree1.column(f"{colmnsname1[3]}", stretch=False, width=300)
+
+        for row in data:
+            self.tree1.insert('', tk.END, values=tuple(row))
+
+        self.blueLab = tk.Label(self.viewDB_otch3SQLL, bg="#107eaf", height=35)
+        self.blueLab.pack(side=tk.BOTTOM, fill=tk.X)
+        self.closeButton = tk.Button(self.viewDB_otch3SQLL, text="Закрыть", bd=0, justify=CENTER, width=12, font=('', 18),
+                                     command=self.reboot)
+        self.closeButton.place(x=650, y=750)
+
+    def otch4(self):
+        win = tk.Toplevel(self)
+        win.title('Введите табномер водителя')
+        win.geometry('300x150')
+        win.resizable(False, False)
+
+        self.frame = tk.Frame(win)
+        self.frame.place(relwidth=1, relheight=1)
+
+        self.lab_Login = tk.Label(self.frame, text="Табельный номер\nводителя", font=10)
+        self.lab_Login.place(x=15, y=15)
+
+        self.inp2 = ttk.Entry(self.frame, width=10)
+        self.inp2.place(x=150, y=15)
+
+        self.connButton = tk.Button(self.frame, text="Сформировать", fg="black", width=10, font=('', 12),
+                                    command=self.otch4SQL)
+
+        self.connButton.pack(side=tk.BOTTOM, pady=10)
+    def otch4SQL(self):
+        tbvod = self.inp2.get()
+        self.otch3SQL = tk.Toplevel(self)
+        self.otch3SQL.title(f"Отчет по путевым листам")
+        screen_width = self.otch3SQL.winfo_screenwidth()
+        self.otch3SQL.geometry(f'{screen_width}x800')
+        self.otch3SQL.rowconfigure(index=0, weight=1)
+        self.otch3SQL.columnconfigure(index=0, weight=1)
+        self.otch3SQL.resizable(False, False)
+
+        self.viewDB_otch3SQLL = tk.Frame(self.otch3SQL)
+        self.viewDB_otch3SQLL.place(relwidth=1, relheight=1)
+
+        try:
+            with conn.cursor() as cursor:
+                cursor.execute(f"""SELECT COUNT(*) AS contract_count
+                                    FROM pl
+                                    WHERE pl.tab_number = '{tbvod}';""")
+                result = cursor.fetchone()[0]
+        except Exception as _ex:
+            pass
+
+        self.txet = tk.Text(self.viewDB_otch3SQLL, width=20, height=3, wrap=WORD)
+        self.txet.insert(1.0, f"Общее количество выданных ПЛ: {result}")
+        self.txet.tag_add('title', 1.0, '1.end')
+
+        self.txet.tag_config('title', justify=CENTER,
+                             font=("", 18, ''))
+        self.txet.pack(side=tk.TOP, fill=tk.X)
+
+        data = []
+        try:
+            with conn.cursor() as cursor:
+                cursor.execute(f"""SELECT 	pl.national_avto_num, pl.pl_number, pl.tab_number, companydrivers.drivers_name, pl.code_gsm, pl.unit, pl.ostatok, pl.amount, pl.potr
+                                    FROM pl, companydrivers
+                                    WHERE pl.tab_number='{tbvod}' AND companydrivers.tab_number='{tbvod}';
+                                    """)
+                data = [row for row in cursor.fetchall()]
+        except Exception as _ex:
+            pass
+
+        colmnsname1 = ['Государственный номер ТС','Номер ПЛ','Табельный номер водителя','ФИО водителя',
+                       'Код ГСМ','Единица измерения','Остаток ГСМ','Объем полученных ГСМ','Объем потраченных ГСМ']
+        self.tree1 = ttk.Treeview(self.viewDB_otch3SQLL, height=37, columns=colmnsname1, show="headings")
+        self.tree1.pack(fill=X)
+
+        self.tree1.heading(f"{colmnsname1[0]}", text=f"{colmnsname1[0]}")
+        self.tree1.column(f"{colmnsname1[0]}", stretch=False, width=200)
+
+        self.tree1.heading(f"{colmnsname1[1]}", text=f"{colmnsname1[1]}")
+        self.tree1.column(f"{colmnsname1[1]}", stretch=False, width=120)
+
+        self.tree1.heading(f"{colmnsname1[2]}", text=f"{colmnsname1[2]}")
+        self.tree1.column(f"{colmnsname1[2]}", stretch=False, width=200)
+
+        self.tree1.heading(f"{colmnsname1[3]}", text=f"{colmnsname1[3]}")
+        self.tree1.column(f"{colmnsname1[3]}", stretch=False, width=200)
+
+        self.tree1.heading(f"{colmnsname1[4]}", text=f"{colmnsname1[4]}")
+        self.tree1.column(f"{colmnsname1[4]}", stretch=False, width=180)
+
+        self.tree1.heading(f"{colmnsname1[5]}", text=f"{colmnsname1[5]}")
+        self.tree1.column(f"{colmnsname1[5]}", stretch=False, width=120)
+
+        self.tree1.heading(f"{colmnsname1[6]}", text=f"{colmnsname1[6]}")
+        self.tree1.column(f"{colmnsname1[6]}", stretch=False, width=120)
+
+        self.tree1.heading(f"{colmnsname1[7]}", text=f"{colmnsname1[7]}")
+        self.tree1.column(f"{colmnsname1[7]}", stretch=False, width=150)
+
+        self.tree1.heading(f"{colmnsname1[8]}", text=f"{colmnsname1[8]}")
+        self.tree1.column(f"{colmnsname1[8]}", stretch=False, width=140)
+
+        for row in data:
+            self.tree1.insert('', tk.END, values=tuple(row))
+
+        self.blueLab = tk.Label(self.viewDB_otch3SQLL, bg="#107eaf", height=35)
+        self.blueLab.pack(side=tk.BOTTOM, fill=tk.X)
+        self.closeButton = tk.Button(self.viewDB_otch3SQLL, text="Закрыть", bd=0, justify=CENTER, width=12,
+                                     font=('', 18),
+                                     command=self.reboot)
+        self.closeButton.place(x=650, y=750)
 
     def refresh(self, column_names, tablename, tablenamerus):
         self.viewTableDataBases.destroy()
