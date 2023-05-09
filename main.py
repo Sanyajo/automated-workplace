@@ -52,7 +52,7 @@ class progrload(tk.Frame):
 
         while True:
             self.frame.update()
-            if value_var.get() == 11:
+            if value_var.get() == 80:
                 self.progressbar.stop()
                 loginSystem(win)
                 break
@@ -166,7 +166,11 @@ class mainProgramm(tk.Frame):
         self.othetButton.place(x=555,y=300)
 
         self.arhbd = tk.Button(self.frameMain,text="Восстановление БД", fg="black", width=18, font=('',15), command = self.arhbutton)
-        self.arhbd.place(x=555, y =435)
+        self.arhbd.place(x=555, y =400)
+
+        self.ifno = tk.Button(self.frameMain, text="Инфо", fg="black", width=18, font=('', 15),
+                               command=self.infowind)
+        self.ifno.place(x=555, y=435)
 
         self.closeApp = tk.Button(self.frameMain,text="Выход",fg="black",width=18,font=('',15),command=self.closeApp)
         self.closeApp.place(x=555,y=475)
@@ -424,6 +428,25 @@ class mainProgramm(tk.Frame):
             self.closeButton = tk.Button(self.viewDB_frame, text="Закрыть", bd=0, justify=CENTER, width=12, font=('', 18),
                                          command=self.reboot)
             self.closeButton.place(x=900, y=720)
+
+    def infowind(self):
+        self.otch1SQL = tk.Toplevel(self)
+        self.otch1SQL.title(f"Инфо")
+        screen_width = self.otch1SQL.winfo_screenwidth()
+        self.otch1SQL.geometry(f'400x300')
+        self.otch1SQL.rowconfigure(index=0, weight=1)
+        self.otch1SQL.columnconfigure(index=0, weight=1)
+        self.otch1SQL.resizable(False, False)
+
+        self.viewDB_otch1SQL = tk.Frame(self.otch1SQL)
+        self.viewDB_otch1SQL.place(relwidth=1, relheight=1)
+
+        self.txet = tk.Text(self.viewDB_otch1SQL, width=20,  wrap=WORD)
+        self.txet.insert(1.0, f"\tНаименование АРМ:\tАРМ заведующего ГСМ \n \tВерсия программы\t1.0.0\n \tИнформация о разработчике:\t\t\tСтудент 3 курса\n\t\t\t\t     Группы АС-59\n\t\t\t\t     Сахацкий А.С.")
+
+        self.txet.tag_config('title', justify=CENTER,
+                             font=("", 18, ''))
+        self.txet.pack(side=tk.TOP, fill=tk.X)
 
     def rebot(a, _event=None):
         a.destroy()
