@@ -6,10 +6,7 @@ import psycopg2
 from config import *
 from functools import partial
 import time
-import datetime
-
 import subprocess
-import gzip
 import os
 
 
@@ -71,7 +68,7 @@ class loginSystem(tk.Frame):
 
     def hide_password(self):
         self.inputPassword.config(show="*")
-    #Окно логина
+
     def loginSystem(self):
 
         #методы возвращают размеры экрана, на котором запущено окно
@@ -189,7 +186,7 @@ class mainProgramm(tk.Frame):
         time_string = time.strftime("%m/%d/%Y", named_tuple)
         self.LogTime=tk.Label(self.frameMain,text=f"Дата входа:\t{time_string}",font=('',16), bg="#4d4f4d")
         self.LogTime.place(x=50,y=450)
-    #Cправочные документы
+
     def spiskiApp(self):
         w = win.winfo_screenwidth()
         h = win.winfo_screenheight()
@@ -227,7 +224,7 @@ class mainProgramm(tk.Frame):
 
         self.closeB = tk.Button(self.spiskiFrame, text='Закрыть', width=5, font=('', 18), command=spiskiAppWindow.destroy)
         self.closeB.place(x=360, y=535)
-    #Оперативные документы
+
     def docApp(self):
         w = win.winfo_screenwidth()
         h = win.winfo_screenheight()
@@ -278,7 +275,7 @@ class mainProgramm(tk.Frame):
 
         self.closeB = tk.Button(self.docFrame, text='Закрыть', width=5, font=('', 18), command=docAppWindow.destroy)
         self.closeB.place(x=360, y=635)
-    #Отчетные документы
+
     def othWindowSp(self):
         w = win.winfo_screenwidth()
         h = win.winfo_screenheight()
@@ -316,7 +313,7 @@ class mainProgramm(tk.Frame):
 
         self.closeB = tk.Button(self.othWindow, text='Закрыть', width=5, font=('', 18), command=othWind.destroy)
         self.closeB.place(x=360,y=535)
-    #Окно закрытия приложения
+
     def closeApp(self):
         w = win.winfo_screenwidth()
         h = win.winfo_screenheight()
@@ -339,7 +336,7 @@ class mainProgramm(tk.Frame):
 
         self.noButton = tk.Button(self.closeWindow, text="Нет",fg='red', width=12, font=('', 12),command=clWin.destroy)
         self.noButton.place(x=150,y=100)
-    #Простотр содержимого БД
+
     def viewDB(self, column_names, tablename, tablenamerus):
         self.viewTableDataBases = tk.Toplevel(self)
         self.viewTableDataBases.title(f"{tablenamerus}")
@@ -428,7 +425,6 @@ class mainProgramm(tk.Frame):
                                          command=self.reboot)
             self.closeButton.place(x=900, y=720)
 
-    #Выход из системы и архивация бд
     def rebot(a, _event=None):
         a.destroy()
         os.environ['PGPASSWORD'] = f'{password}'
@@ -445,7 +441,7 @@ class mainProgramm(tk.Frame):
             buflist = list_typegsm
             inputTableWin = tk.Toplevel(self)
             inputTableWin.title("Добавление в справочник ГСМ")
-            inputTableWin.geometry('400x400')
+            inputTableWin.geometry('400x500')
             inputTableWin.resizable(False, False)
 
             self.inTable = tk.Frame(inputTableWin)
@@ -466,15 +462,20 @@ class mainProgramm(tk.Frame):
             self.l3e=ttk.Entry(self.inTable, width=15)
             self.l3e.pack(fill=tk.X)
 
+            self.l4 = tk.Label(self.inTable, text=f"{buflist[3]}", bd=0, justify=CENTER, height=3, font=('', 18))
+            self.l4.pack(side=tk.TOP, fill=tk.X)
+            self.l4e = ttk.Entry(self.inTable, width=15)
+            self.l4e.pack(fill=tk.X)
+
             self.fram1 = tk.Frame(self.inTable, bg="#107eaf", width=300, height=600)
             self.fram1.pack(side=tk.BOTTOM, fill=tk.X)
 
             self.inputButton = tk.Button(self.inTable, text="Добавить",fg="black",width=18,font=('',15), command=partial(self.inputTableSQL, column_names, tablename, tablenamerus))
-            self.inputButton.place(x=90,y=300)
+            self.inputButton.place(x=90,y=400)
 
             self.closeB = tk.Button(self.inTable, text='Закрыть', fg="black",width=18,font=('',15),
                                     command=inputTableWin.destroy)
-            self.closeB.place(x=90, y=350)
+            self.closeB.place(x=90, y=450)
 
         if tablename == "vendorgsm":
             buflist = list_vendorgsm
@@ -941,11 +942,12 @@ class mainProgramm(tk.Frame):
             value1 = self.l1e.get()
             value2 = self.l2e.get()
             value3 = self.l3e.get()
+            value4 = self.l4e.get()
             try:
                 with conn.cursor() as cursor:
                     cursor.execute(f"""INSERT INTO "{tablename}"(
-            	                            "code_gsm", "name_gsm", "unit") VALUES 
-            	                            ('{value1}','{value2}', '{value3}') """)
+            	                            "code_gsm", "name_gsm", "unit", "mark_gsm") VALUES 
+            	                            ('{value1}','{value2}', '{value3}','{value4}') """)
                     self.refresh(column_names, tablename, tablenamerus)
 
             except Exception as _ex:
@@ -1232,7 +1234,7 @@ class mainProgramm(tk.Frame):
 
                 self.serTable = tk.Toplevel(self)
                 self.serTable.title(f"Изменение в {tablename}")
-                self.serTable.geometry('300x400')
+                self.serTable.geometry('300x500')
                 self.serTable.resizable(False, False)
 
                 self.sTable = tk.Frame(self.serTable)
@@ -1256,16 +1258,22 @@ class mainProgramm(tk.Frame):
                 self.l3e.insert(0, upValue[0][2])
                 self.l3e.pack(fill=tk.X)
 
+                self.l4 = tk.Label(self.sTable, text=f"{buflist[3]}", bd=0, justify=CENTER, height=3, font=('', 18))
+                self.l4.pack(side=tk.TOP, fill=tk.X)
+                self.l4e = ttk.Entry(self.sTable, width=15)
+                self.l4e.insert(0, upValue[0][3])
+                self.l4e.pack(fill=tk.X)
+
                 self.fram1 = tk.Frame(self.sTable, bg="#107eaf", width=300, height=600)
                 self.fram1.pack(side=tk.BOTTOM, fill=tk.X)
 
                 self.inputButton = tk.Button(self.sTable, text="Изменить", fg="black", width=18, font=('', 15),
                                              command=partial(self.upDateSQL,tablename, upValue,column_names, tablenamerus))
-                self.inputButton.place(x=40, y=300)
+                self.inputButton.place(x=40, y=400)
 
                 self.closeB = tk.Button(self.sTable, text='Закрыть', fg="black", width=18, font=('', 15),
                                         command=self.serTable.destroy)
-                self.closeB.place(x=40, y=350)
+                self.closeB.place(x=40, y=450)
 
         if tablename == "vendorgsm":
             selection = self.tree.selection()
@@ -1793,10 +1801,11 @@ class mainProgramm(tk.Frame):
             value1 = self.l1e.get()
             value2 = self.l2e.get()
             value3 = self.l3e.get()
+            value4 = self.l4e.get()
             try:
                 with conn.cursor() as cursor:
-                    cursor.execute(f"""UPDATE {tablename} SET code_gsm='{value1}', name_gsm='{value2}', unit='{value3}'
-                        WHERE code_gsm='{upValue[0][0]}' AND name_gsm='{upValue[0][1]}' AND unit='{upValue[0][2]}' """)
+                    cursor.execute(f"""UPDATE {tablename} SET code_gsm='{value1}', name_gsm='{value2}', unit='{value3}', mark_gsm='{value4}'
+                        WHERE code_gsm='{upValue[0][0]}' AND name_gsm='{upValue[0][1]}' AND unit='{upValue[0][2]}' AND mark_gsm='{upValue[0][3]}' """)
                     self.refresh(column_names, tablename, tablenamerus)
 
             except Exception as _ex:
@@ -2604,7 +2613,4 @@ if __name__ =="__main__":
     win = tk.Tk()
     start = progrload(win)
     start.pack()
-    # start.destroy()
-    # start=mainProgramm(win)
-    # start.pack
     win.mainloop()
