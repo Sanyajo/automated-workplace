@@ -2043,9 +2043,7 @@ class mainProgramm(tk.Frame):
                 try:
                     with conn.cursor() as cursor:
                         cursor.execute(f"""DELETE FROM {tablename} WHERE code_gsm='{delValue}' """)
-                        check = True
-                        if check:
-                            self.refresh(column_names, tablename, tablenamerus)
+                        self.refresh(column_names, tablename, tablenamerus)
                 except Exception as _ex:
                     print("ERORR")
 
@@ -2065,9 +2063,7 @@ class mainProgramm(tk.Frame):
                 try:
                     with conn.cursor() as cursor:
                         cursor.execute(f"""DELETE FROM {tablename} WHERE code_post='{delValue1}' AND  code_gsm='{delValue2}' """)
-                        check = True
-                        if check:
-                            self.refresh(column_names, tablename, tablenamerus)
+                        self.refresh(column_names, tablename, tablenamerus)
                 except Exception as _ex:
                     print("ERORR")
 
@@ -2085,9 +2081,7 @@ class mainProgramm(tk.Frame):
                     with conn.cursor() as cursor:
                         cursor.execute(
                             f"""DELETE FROM {tablename} WHERE tab_number='{delValue1}' """)
-                        check = True
-                        if check:
-                            self.refresh(column_names, tablename, tablenamerus)
+                        self.refresh(column_names, tablename, tablenamerus)
                 except Exception as _ex:
                     print("ERORR")
 
@@ -2105,9 +2099,7 @@ class mainProgramm(tk.Frame):
                     with conn.cursor() as cursor:
                         cursor.execute(
                             f"""DELETE FROM {tablename} WHERE national_avto_num='{delValue1}' """)
-                        check = True
-                        if check:
-                            self.refresh(column_names, tablename, tablenamerus)
+                         self.refresh(column_names, tablename, tablenamerus)
                 except Exception as _ex:
                     print("ERORR")
 
@@ -2125,9 +2117,7 @@ class mainProgramm(tk.Frame):
                     with conn.cursor() as cursor:
                         cursor.execute(
                             f"""DELETE FROM {tablename} WHERE contract_number='{delValue1}' """)
-                        check = True
-                        if check:
-                            self.refresh(column_names, tablename, tablenamerus)
+                        self.refresh(column_names, tablename, tablenamerus)
                 except Exception as _ex:
                     print("ERORR")
 
@@ -2147,9 +2137,7 @@ class mainProgramm(tk.Frame):
                     with conn.cursor() as cursor:
                         cursor.execute(
                             f"""DELETE FROM {tablename} WHERE nar_number='{delValue1}' """)
-                        check = True
-                        if check:
-                            self.refresh(column_names, tablename, tablenamerus)
+                        self.refresh(column_names, tablename, tablenamerus)
                 except Exception as _ex:
                     print("ERORR")
 
@@ -2167,9 +2155,7 @@ class mainProgramm(tk.Frame):
                     with conn.cursor() as cursor:
                         cursor.execute(
                             f"""DELETE FROM {tablename} WHERE pl_number='{delValue1}' """)
-                        check = True
-                        if check:
-                            self.refresh(column_names, tablename, tablenamerus)
+                        self.refresh(column_names, tablename, tablenamerus)
                 except Exception as _ex:
                     print("ERORR")
 
@@ -2190,9 +2176,7 @@ class mainProgramm(tk.Frame):
                     with conn.cursor() as cursor:
                         cursor.execute(
                             f"""DELETE FROM {tablename} WHERE ttn_number='{delValue1}' AND  date_zakl_ttn='{delValue2}' """)
-                        check = True
-                        if check:
-                            self.refresh(column_names, tablename, tablenamerus)
+                        self.refresh(column_names, tablename, tablenamerus)
                 except Exception as _ex:
                     print("ERORR")
 
